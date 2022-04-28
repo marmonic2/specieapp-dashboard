@@ -1,0 +1,55 @@
+<!-- Modal edit Fish Pots -->
+<div class="modal-header">
+
+  <h5 class="modal-title" id="editLabel">Nasas langostas</h5>
+
+  <button type="button" class="close" (click)="closeModal()" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+<div class="modal-body">
+  <form [formGroup]="formEditLobsterPots" (ngSubmit)="saveChangeLobsterPots()">
+      <div class="form-group row">
+        <label for="lobster_pots_number_lines_perdays" class="col-sm-4 col-form-label">Número Lineas/día</label>
+        <div class="col-sm-8">
+            <input type="text" class="form-control"  formControlName="lobster_pots_number_lines_perdays" id="lobster_pots_number_lines_perdays" (keypress)="keyboardDisabled($event.charCode)">
+            <div class="text-danger mt-2" *ngIf="invalidFieldLobsterPots('lobster_pots_number_lines_perdays')">
+                <p>{{ getErrorMessageEditLobsterPots("lobster_pots_number_lines_perdays") }}</p>
+            </div>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="lobster_pots_number_lingadas_perlines" class="col-sm-4 col-form-label">Número Lingadas/línea</label>
+        <div class="col-sm-8">
+            <input type="text" class="form-control"  formControlName="lobster_pots_number_lingadas_perlines" id="lobster_pots_number_lingadas_perlines" (keypress)="keyboardDisabled($event.charCode)">
+            <div class="text-danger mt-2" *ngIf="invalidFieldLobsterPots('lobster_pots_number_lingadas_perlines')">
+                <p>{{ getErrorMessageEditLobsterPots("lobster_pots_number_lingadas_perlines") }}</p>
+            </div>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="lobster_pots_number_nasa_perlingada" class="col-sm-4 col-form-label">Número Nasas/Lingada</label>
+        <div class="col-sm-8">
+            <input type="text" class="form-control"  formControlName="lobster_pots_number_nasa_perlingada" id="lobster_pots_number_nasa_perlingada" (keypress)="keyboardDisabled($event.charCode)">
+            <div class="text-danger mt-2" *ngIf="invalidFieldLobsterPots('lobster_pots_number_nasa_perlingada')">
+                <p>{{ getErrorMessageEditLobsterPots("lobster_pots_number_nasa_perlingada") }}</p>
+            </div>
+        </div>
+      </div>
+      <div class="form-group row">
+          <label for="lobster_pots_effort" class="col-sm-4 col-form-label">Esfuerzo</label>
+          <div class="col-sm-8">
+              <input type="text" class="form-control"  formControlName="lobster_pots_effort" id="lobster_pots_effort" (keypress)="keyboardDisabled($event.charCode)">
+              <div class="text-danger mt-2" *ngIf="invalidFieldLobsterPots('lobster_pots_effort')">
+                  <p>{{ getErrorMessageEditLobsterPots("lobster_pots_effort") }}</p>
+              </div>
+          </div>
+      </div>
+      <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancelar</button>
+
+          <button type="submit" class="btn btn-primary">Editar</button>
+      </div>
+  </form>
+</div>

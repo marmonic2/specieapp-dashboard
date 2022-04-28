@@ -1,0 +1,74 @@
+<div class="auth-wrapper d-flex no-block justify-content-center align-items-center" style="background:url(assets/images/background/login-register.jpg) no-repeat center center;">
+    <div>        
+        <div class="auth-box">
+            <div id="loginform" [ngClass]="{'d-none': recoverform}">
+                <div class="logo">
+                    <span class="db"><img src="assets/images/logo-icon.png" alt="logo" /></span>
+                    <h5 class="font-medium m-b-20">Sign In to Admin</h5>
+                </div>
+                <div *ngIf="msg" class="alert alert-danger">{{ msg }}</div>
+                <!-- Form -->
+                <div class="row">
+                    <div class="col-12">
+                        <form class="form-horizontal m-t-20" id="loginform" [formGroup]="loginFormData" (ngSubmit)="login()">
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon1"><i class="ti-user"></i></span>
+                                </div>
+                                <input type="text" class="form-control form-control-lg" placeholder="Email" aria-label="email"
+                                aria-describedby="basic-addon1" formControlName="email">
+                            </div>
+                            <div class="text-danger mt-2" *ngIf="invalidField('email')">
+
+                                <p>{{ getErrorMessage("email") }}</p>
+
+                            </div>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon2"><i class="ti-pencil"></i></span>
+                                </div>
+                                <input type="password" class="form-control form-control-lg" placeholder="Password" aria-label="password"
+                                aria-describedby="basic-addon1" formControlName="password">
+                            </div>
+                            <div class="text-danger mt-2" *ngIf="invalidField('password')">
+
+                                <p>{{ getErrorMessage("password") }}</p>
+
+                            </div>
+                            <div class="form-group text-center">
+                                <div class="col-xs-12 p-b-20">
+                                    <button class="btn btn-block btn-lg btn-info" type="button" (click)="login()">Log
+                                    In</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div id="recoverform" [ngClass]="{'d-block': recoverform}">
+                <div class="logo">
+                    <span class="db"><img src="assets/images/logo-icon.png" alt="logo" /></span>
+                    <h5 class="font-medium m-b-20">Recover Password</h5>
+                    <span>Enter your Email and instructions will be sent to you!</span>
+                </div>
+                <div class="row m-t-20">
+                    <!-- Form -->
+                    <form class="col-12">
+                        <!-- email -->
+                        <div class="form-group row">
+                            <div class="col-12">
+                                <input class="form-control form-control-lg" type="email" required="" placeholder="Username">
+                            </div>
+                        </div>
+                        <!-- pwd -->
+                        <div class="row m-t-20">
+                            <div class="col-12">
+                                <button class="btn btn-block btn-lg btn-danger" type="submit" name="action">Reset</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

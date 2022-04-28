@@ -1,0 +1,287 @@
+
+{ 
+  "modules":[
+    {
+      "_id": "61b369033b5ff5a324f93057",
+      "code": 1,
+      "description": "Pesca",
+      "icon": "icon.jpg",
+      "is_active": true,
+      "createdAt": "2021-12-07T14:41:40.675Z",
+      "updatedAt": "2021-12-08T03:14:37.528Z",
+      "__v": 0
+    },
+    {
+      "_id": "61b3690f3b5ff5a324f9305d",
+      "code": 2,
+      "createdAt": "2021-12-10T14:49:51.039Z",
+      "description": "Agropecuario",
+      "icon": "agro.jpg",
+      "is_active": true,
+      "updatedAt": "2021-12-10T14:49:51.039Z",
+      "__v": 0
+    }
+  ],
+  "availableForms":[
+    {
+      "_id": "61af76386cca92a4d4ea06dd",
+      "description": "Mediciones de Peces",
+      "code": "FO-MI-DP-03",
+      "version": "7",
+      "approvalDate": "2021-12-02T15:22:59.000Z",
+      "module": {
+          "_id": "61af72a4af4dddf7a0cb181d",
+          "code": 1,
+          "description": "Pesca",
+          "icon": "icon.jpg",
+          "is_active": true,
+          "createdAt": "2021-12-07T14:41:40.675Z",
+          "updatedAt": "2021-12-08T03:14:37.528Z",
+          "__v": 0
+      },
+      "is_active": true,
+      "createdAt": "2021-12-07T14:56:56.708Z",
+      "updatedAt": "2021-12-07T15:52:00.057Z",
+      "__v": 0
+    },
+    {
+        "_id": "61afc0b2d698c688cd6117d3",
+        "description": "Mediciones de tiburones",
+        "code": "FO-MI-DO-04",
+        "version": "12",
+        "approvalDate": "2021-12-06T05:00:10.000Z",
+        "module": {
+            "_id": "61af72a4af4dddf7a0cb181d",
+            "code": 1,
+            "description": "Pesca",
+            "icon": "icon.jpg",
+            "is_active": true,
+            "createdAt": "2021-12-07T14:41:40.675Z",
+            "updatedAt": "2021-12-08T03:14:37.528Z",
+            "__v": 0
+        },
+        "is_active": true,
+        "createdAt": "2021-12-07T20:14:42.700Z",
+        "updatedAt": "2021-12-08T03:20:03.610Z",
+        "__v": 0
+    }
+  ],
+  "sectionForms":[
+    {
+      "_id": "61ac0ff503547446ac260854",
+      "description": "Sección datos personales",
+      "form_available": {
+          "_id": "61af76386cca92a4d4ea06dd",
+          "description": "Mediciones de Peces",
+          "code": "FO-MI-DO-04",
+          "version": "7",
+          "approvalDate": "2021-12-02T15:22:59.000Z",
+          "module": "61af72a4af4dddf7a0cb181d",
+          "is_active": true,
+          "createdAt": "2021-12-07T14:56:56.708Z",
+          "updatedAt": "2021-12-07T15:52:00.057Z",
+          "__v": 0
+      },
+      "is_active": true,
+      "createdAt": "2021-12-05T01:03:49.972Z",
+      "updatedAt": "2021-12-07T15:59:13.442Z",
+      "__v": 0
+    },
+    {
+      "_id": "61ac108203547446ac260875",
+      "description": "Sección data pescados",
+      "form_available": {
+          "_id": "61af76386cca92a4d4ea06dd",
+          "description": "Mediciones de Peces",
+          "code": "FO-MI-DP-03",
+          "version": "7",
+          "approvalDate": "2021-12-02T15:22:59.000Z",
+          "module": "61af72a4af4dddf7a0cb181d",
+          "is_active": true,
+          "createdAt": "2021-12-07T14:56:56.708Z",
+          "updatedAt": "2021-12-07T15:52:00.057Z",
+          "__v": 0
+      },
+      "is_active": true,
+      "createdAt": "2021-12-05T01:06:10.411Z",
+      "updatedAt": "2021-12-07T17:53:41.053Z",
+      "__v": 0
+    },
+    {
+      "_id": "61ac112b03547446ac26088d",
+      "description": "Sección de formulario 3",
+      "form_available": {
+          "_id": "61af76386cca92a4d4ea06dd",
+          "description": "Mediciones de Peces",
+          "code": "FO-MI-DP-03",
+          "version": "7",
+          "approvalDate": "2021-12-02T15:22:59.000Z",
+          "module": "61af72a4af4dddf7a0cb181d",
+          "is_active": true,
+          "createdAt": "2021-12-07T14:56:56.708Z",
+          "updatedAt": "2021-12-07T15:52:00.057Z",
+          "__v": 0
+      },
+      "is_active": true,
+      "createdAt": "2021-12-05T01:08:59.968Z",
+      "updatedAt": "2021-12-07T17:53:44.334Z",
+      "__v": 0
+    },
+    {
+      "_id": "61ac11f003547446ac2608b5",
+      "description": "Sección de formulario 4",
+      "form_available": {
+          "_id": "61af76386cca92a4d4ea06dd",
+          "description": "Mediciones de Peces",
+          "code": "FO-MI-DP-03",
+          "version": "7",
+          "approvalDate": "2021-12-02T15:22:59.000Z",
+          "module": "61af72a4af4dddf7a0cb181d",
+          "is_active": true,
+          "createdAt": "2021-12-07T14:56:56.708Z",
+          "updatedAt": "2021-12-07T15:52:00.057Z",
+          "__v": 0
+      },
+      "is_active": true,
+      "createdAt": "2021-12-05T01:12:16.010Z",
+      "updatedAt": "2021-12-07T15:23:38.330Z",
+      "__v": 0
+    },
+    {
+      "_id": "61afcbd9550d3ff8932a7ea5",
+      "description": "Sección de formulario de tiburones",
+      "form_available": {
+          "_id": "61afc0b2d698c688cd6117d3",
+          "description": "Mediciones de tiburones",
+          "code": "FO-MI-DP-03",
+          "version": "12",
+          "approvalDate": "2021-12-06T05:00:10.000Z",
+          "module": "61af72a4af4dddf7a0cb181d",
+          "is_active": true,
+          "createdAt": "2021-12-07T20:14:42.700Z",
+          "updatedAt": "2021-12-08T03:20:03.610Z",
+          "__v": 0
+      },
+      "is_active": true,
+      "createdAt": "2021-12-07T21:02:17.668Z",
+      "updatedAt": "2021-12-07T21:02:17.668Z",
+      "__v": 0
+    }
+  ],
+  "questionForms": [
+    {
+      "_id": "61ae6e805935e11812d90171",
+      "nameQuestion": "tipo_identificacion",
+      "description": "Digite su identificación",
+      "data": [
+          {
+              "idData": "0",
+              "descriptionData": "T.I",
+              "_id": "61afce20365dd557fa424626"
+          },
+          {
+              "idData": "1",
+              "descriptionData": "C.C",
+              "_id": "61afce20365dd557fa424627"
+          },
+          {
+              "idData": "2",
+              "descriptionData": "C.E",
+              "_id": "61afce20365dd557fa424628"
+          },
+          {
+              "idData": "3",
+              "descriptionData": "P.P",
+              "_id": "61afce20365dd557fa424629"
+          }
+      ],
+      "widget": "select",
+      "dataType": "string",
+      "required": true,
+      "min": 10,
+      "max": 20,
+      "section_form": {
+          "_id": "61ac0ff503547446ac260854",
+          "description": "Sección datos personales",
+          "form_available": "61af76386cca92a4d4ea06dd",
+          "is_active": true,
+          "createdAt": "2021-12-05T01:03:49.972Z",
+          "updatedAt": "2021-12-07T15:59:13.442Z",
+          "__v": 0
+      },
+      "is_active": true,
+      "createdAt": "2021-12-06T20:11:44.422Z",
+      "updatedAt": "2021-12-07T21:12:00.412Z",
+      "__v": 0
+    },
+    {
+      "_id": "61af7d246cca92a4d4ea0948",
+      "nameQuestion": "genero",
+      "description": "Nombre del barco",
+      "data": [
+          {
+              "idData": "0",
+              "descriptionData": "male",
+              "_id": "61afcda2365dd557fa42457f"
+          },
+          {
+              "idData": "1",
+              "descriptionData": "female",
+              "_id": "61afcda2365dd557fa424580"
+          },
+          {
+              "idData": "2",
+              "descriptionData": "other",
+              "_id": "61afcda2365dd557fa424581"
+          },
+          {
+              "idData": "3",
+              "descriptionData": "i_prefer_not_to_say",
+              "_id": "61afcda2365dd557fa424582"
+          }
+      ],
+      "widget": "checkbox",
+      "dataType": "string",
+      "required": true,
+      "min": 2,
+      "max": 25,
+      "section_form": {
+          "_id": "61ac0ff503547446ac260854",
+          "description": "Sección datos personales",
+          "form_available": "61af76386cca92a4d4ea06dd",
+          "is_active": true,
+          "createdAt": "2021-12-05T01:03:49.972Z",
+          "updatedAt": "2021-12-07T15:59:13.442Z",
+          "__v": 0
+      },
+      "is_active": true,
+      "createdAt": "2021-12-07T15:26:28.722Z",
+      "updatedAt": "2021-12-07T21:09:54.885Z",
+      "__v": 0
+    },
+    {
+      "_id": "61afce33365dd557fa424640",
+      "nameQuestion": "nombre",
+      "description": "Nombre de la persona",
+      "data": [],
+      "widget": "input",
+      "dataType": "string",
+      "required": true,
+      "min": 1,
+      "max": 2,
+      "section_form": {
+          "_id": "61ac0ff503547446ac260854",
+          "description": "Sección datos personales",
+          "form_available": "61af76386cca92a4d4ea06dd",
+          "is_active": true,
+          "createdAt": "2021-12-05T01:03:49.972Z",
+          "updatedAt": "2021-12-07T15:59:13.442Z",
+          "__v": 0
+      },
+      "is_active": true,
+      "createdAt": "2021-12-07T21:12:19.934Z",
+      "updatedAt": "2021-12-07T21:12:51.325Z",
+      "__v": 0
+    }
+  ]
+}

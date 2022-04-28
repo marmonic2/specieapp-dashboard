@@ -1,0 +1,188 @@
+<div class="modal-header">
+    <h5 class="modal-title" id="editLabel">Editar producciones de la unidad</h5>
+    <button type="button" class="close" (click)="closeModal()" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
+<div class="modal-body">
+    <form [formGroup]="formEditLivestockInv" (ngSubmit)="saveChange()">
+        <div class="form-group row">
+            <div>
+                <label for="average_cicle_chicken" class="col-sm-10 col-form-label">Ciclo promedio de gallinas</label>
+                <div class="col-sm-10">
+                    <input type="number" class="form-control"  formControlName="average_cicle_chicken" id="average_cicle_chicken">
+                    <div class="text-danger mt-2" *ngIf="invalidField('average_cicle_chicken')">
+                        <p>{{ getErrorMessageEdit("average_cicle_chicken") }}</p>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <label for="average_cicle_pig" class="col-sm-10 col-form-label">Ciclo promedio de cerdos</label>
+                <div class="col-sm-10">
+                    <input type="number" class="form-control"  formControlName="average_cicle_pig" id="average_cicle_pig">
+                    <div class="text-danger mt-2" *ngIf="invalidField('average_cicle_pig')">
+                        <p>{{ getErrorMessageEdit("average_cicle_pig") }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div>
+                <label for="average_day_chicken" class="col-sm-10 col-form-label">Promedio por día gallinas</label>
+                <div class="col-sm-10">
+                    <input type="number" class="form-control"  formControlName="average_day_chicken" id="average_day_chicken">
+                    <div class="text-danger mt-2" *ngIf="invalidField('average_day_chicken')">
+                        <p>{{ getErrorMessageEdit("average_day_chicken") }}</p>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <label for="average_day_milk" class="col-sm-10 col-form-label">Promedio por día de leche</label>
+                <div class="col-sm-10">
+                    <input type="number" class="form-control"  formControlName="average_day_milk" id="average_day_milk">
+                    <div class="text-danger mt-2" *ngIf="invalidField('average_day_milk')">
+                        <p>{{ getErrorMessageEdit("average_day_milk") }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div>
+                <label for="broilers" class="col-sm-10 col-form-label">Pollos de engorde (kg)</label>
+                <div class="col-sm-10">
+                    <input type="number" class="form-control"  formControlName="broilers" id="broilers">
+                    <div class="text-danger mt-2" *ngIf="invalidField('broilers')">
+                        <p>{{ getErrorMessageEdit("broilers") }}</p>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <label for="chicken_eggs" class="col-sm-10 col-form-label">Huevos de gallina</label>
+                <div class="col-sm-10">
+                    <input type="number" class="form-control"  formControlName="chicken_eggs" id="chicken_eggs">
+                    <div class="text-danger mt-2" *ngIf="invalidField('chicken_eggs')">
+                        <p>{{ getErrorMessageEdit("chicken_eggs") }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div>
+                <label for="last_six_months_chicken" class="col-sm-10 col-form-label">Últimos 6 meses gallinas</label>
+                <div class="col-sm-10">
+                    <input type="number" class="form-control"  formControlName="last_six_months_chicken" id="last_six_months_chicken">
+                    <div class="text-danger mt-2" *ngIf="invalidField('last_six_months_chicken')">
+                        <p>{{ getErrorMessageEdit("last_six_months_chicken") }}</p>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <label for="last_six_months_milk" class="col-sm-10 col-form-label">Últimos 6 meses leche</label>
+                <div class="col-sm-10">
+                    <input type="number" class="form-control"  formControlName="last_six_months_milk" id="last_six_months_milk">
+                    <div class="text-danger mt-2" *ngIf="invalidField('last_six_months_milk')">
+                        <p>{{ getErrorMessageEdit("last_six_months_milk") }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div>
+                <label for="last_six_months_pig" class="col-sm-10 col-form-label">Últimos 6 meses cerdos</label>
+                <div class="col-sm-10">
+                    <input type="number" class="form-control"  formControlName="last_six_months_pig" id="last_six_months_pig">
+                    <div class="text-danger mt-2" *ngIf="invalidField('last_six_months_pig')">
+                        <p>{{ getErrorMessageEdit("last_six_months_pig") }}</p>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <label for="milk" class="col-sm-10 col-form-label">Leche (litros)</label>
+                <div class="col-sm-10">
+                    <input type="number" class="form-control"  formControlName="milk" id="milk">
+                    <div class="text-danger mt-2" *ngIf="invalidField('milk')">
+                        <p>{{ getErrorMessageEdit("milk") }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div>
+                <label for="pig_meat" class="col-sm-10 col-form-label">Carne de cerdo (kg)</label>
+                <div class="col-sm-10">
+                    <input type="number" class="form-control"  formControlName="pig_meat" id="pig_meat">
+                    <div class="text-danger mt-2" *ngIf="invalidField('pig_meat')">
+                        <p>{{ getErrorMessageEdit("pig_meat") }}</p>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <label for="total_birds" class="col-sm-10 col-form-label">Total aves</label>
+                <div class="col-sm-10">
+                    <input type="number" class="form-control"  formControlName="total_birds" id="total_birds">
+                    <div class="text-danger mt-2" *ngIf="invalidField('total_birds')">
+                        <p>{{ getErrorMessageEdit("total_birds") }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div>
+                <label for="total_equines" class="col-sm-10 col-form-label">Total equinos</label>
+                <div class="col-sm-10">
+                    <input type="number" class="form-control"  formControlName="total_equines" id="total_equines">
+                    <div class="text-danger mt-2" *ngIf="invalidField('total_equines')">
+                        <p>{{ getErrorMessageEdit("total_equines") }}</p>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <label for="total_goats" class="col-sm-10 col-form-label">Total caprinos</label>
+                <div class="col-sm-10">
+                    <input type="number" class="form-control"  formControlName="total_goats" id="total_goats">
+                    <div class="text-danger mt-2" *ngIf="invalidField('total_goats')">
+                        <p>{{ getErrorMessageEdit("total_goats") }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div>
+                <label for="total_hen" class="col-sm-10 col-form-label">Total gallinas</label>
+                <div class="col-sm-10">
+                    <input type="number" class="form-control"  formControlName="total_hen" id="total_hen">
+                    <div class="text-danger mt-2" *ngIf="invalidField('total_hen')">
+                        <p>{{ getErrorMessageEdit("total_hen") }}</p>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <label for="total_chicken" class="col-sm-10 col-form-label">Total pollos</label>
+                <div class="col-sm-10">
+                    <input type="number" class="form-control"  formControlName="total_chicken" id="total_chicken">
+                    <div class="text-danger mt-2" *ngIf="invalidField('total_chicken')">
+                        <p>{{ getErrorMessageEdit("total_chicken") }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div>
+                <label for="total_sheep" class="col-sm-10 col-form-label">Total ovejas</label>
+                <div class="col-sm-10">
+                    <input type="number" class="form-control" formControlName="total_sheep" id="total_sheep">
+                    <div class="text-danger mt-2" *ngIf="invalidField('total_sheep')">
+                        <p>{{ getErrorMessageEdit("total_sheep") }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancelar</button>
+        <button type="submit" class="btn btn-primary">Editar</button>
+        </div>
+    </form>
+</div>

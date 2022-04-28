@@ -1,0 +1,68 @@
+<div class="row ml-1">
+    <form [formGroup]="reportForm" (ngSubmit)="getReport(this.reportsExportCsv)">
+        <div class="form-group">
+            <label for="item" class="col-form-label">Modelo</label>
+            <select class="form-control" formControlName="model" id="model" (change)="changeModel($event.target.value)">
+                <option *ngFor="let item of modelsArray" [value]="item.id">{{item.description}}</option>
+            </select>
+        </div>
+
+        <div class="form-group" *ngIf="selectTrue">
+            <label for="item" class="col-form-label">Campo a consultar</label>
+            <div>
+                <select class="form-control" formControlName="item" id="item">
+                    <option *ngFor="let data of arrayName" [value]="data">{{ data }}</option>
+                </select>
+                <!-- <div class="text-danger mt-2" *ngIf="invalidField('item')">
+                    <p>{{ getErrorMessage("item") }}</p>
+                </div> -->
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="item" class="col-form-label">Filtro</label>
+            <select class="form-control" formControlName="filter" id="filter">
+                <option *ngFor="let item of optionsArray" [value]="item.id">{{item.description}}</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="item" class="col-form-label">Fecha</label>
+            <input type="date" class="form-control" formControlName="date" id="date">
+            <!-- <div class="text-danger mt-2" *ngIf="invalidField('approvalDate')">
+                <p>{{ getErrorMessage("approvalDate") }}</p>
+            </div> -->
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Click me</button>
+        </div>
+
+        <!-- <div class="form-group">
+            <button 
+            (click)="reportsExportCsv()"
+            type="button" 
+            class="btn btn-primary">CSV</button>
+        </div> -->
+        
+        <div class="form-group" [ngClass]="{mostrar: inputData , ocultar: !inputData}">
+            <ngx-charts-bar-vertical-2d
+            [view]="view"
+            [scheme]="colorScheme"
+            [results]="multi"
+            [gradient]="gradient"
+            [xAxis]="showXAxis"
+            [yAxis]="showYAxis"
+            [legend]="showLegend"
+            [showXAxisLabel]="showXAxisLabel"
+            [showYAxisLabel]="showYAxisLabel"
+            [xAxisLabel]="xAxisLabel"
+            [yAxisLabel]="yAxisLabel"
+            [legendTitle]="legendTitle"
+            (select)="onSelect($event)"
+            (activate)="onActivate($event)"
+            (deactivate)="onDeactivate($event)">
+            </ngx-charts-bar-vertical-2d>
+        </div>
+        
+        
+    </form>
+</div>

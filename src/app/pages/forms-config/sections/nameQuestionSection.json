@@ -1,0 +1,47 @@
+
+{ 
+  "FO-MI-DP-03": [
+    "ninguna"
+  ],
+  "1500-63.04": [
+    "measured_specie"
+  ],
+  "FO-MI-DP-02": [
+    "landed_catch",
+    "operating_expense",
+    "name_of_fishermen"
+  ],
+  "FO-MI-DP-07": [
+    "weight_check_specie",
+    "names_people_sampling"
+  ],
+  "FO-MI-DP-06": [
+    "fishing_areas",
+    "longLine",
+    "reel",
+    "transshipment_control",
+    "transshipment_product_control",
+    "number_seals"
+  ],
+  "ID-RE-AGRO-01": [
+    "surface",
+    "crops_produced",
+    "livestock_inventory",
+    "birds",
+    "cattle",
+    "pigs"
+  ],
+  "CO-IN-AGRO-01": [
+    "production_expenses",
+    "cultivation_sales",
+    "total_product_sales",
+    "income_different_products"
+  ],
+  "MO-PRI-01": [
+    "vegetables",
+    "tubers",
+    "grains",
+    "meats",
+    "processed_products"
+  ]
+}

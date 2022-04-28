@@ -1,0 +1,631 @@
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title mb-0">Tabla de Desembarco</h4>
+                <div class="d-md-flex mt-3">
+                    <input type="text" name="search" placeholder="Buscar desembarco" class="form-control w-auto" (input)="filterMonitoring($event)" />
+                    <button *ngIf="id_view === 0" type="button" class="btn btn-danger ml-1" (click)='giveDataOff(false)'>
+                        <i class="fas fa-minus-circle" name="Inhabilitados"></i> 
+                    </button>
+                    <button *ngIf="id_view !== 0" type="button" class="btn btn-success ml-1" (click)='giveDataOff(true)'>
+                        <i class="fas fa-check-circle" name="Habilitados"></i> 
+                    </button>   
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-striped no-wrap border mt-4">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Data inicial</th>
+                                <th>Unidad de Pesca</th>
+                                <th>Características del arte de pesca</th>
+                                <th>Captura Desembarque</th>
+                                <th>Sección final</th>
+                                <th>Fecha de Creación</th>
+                                <th>Fecha de Actualización</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let data of monitoringArray | slice: (numberPages-1) * numberDataShow : (numberPages-1) * numberDataShow + numberDataShow; let i = index">
+                                <td class="justify-content-center">{{getPositionMonitoring(data._id)}}</td>
+                                <td class="justify-content-center">
+                                    Editar
+                                    <a (click)="openModalEdit(editMonitoringModalOne, data, i)" class="link mr-2"
+                                      placement="top" ngbTooltip="Edit">
+                                      <i class="ti-pencil text-info m-r-10 cursor" ></i>
+                                    </a>
+                                </td>
+                                <td class="justify-content-center">
+                                    Editar
+                                    <a (click)="openModalEdit(editMonitoringModalTwo, data, i)" class="link mr-2"
+                                      placement="top" ngbTooltip="Edit">
+                                      <i class="ti-pencil text-info m-r-10 cursor" ></i>
+                                    </a>
+                                </td>
+                                <td class="justify-content-center">
+                                    Editar
+                                    <a (click)="openModalEdit(editMonitoringModalThree, data, i)" class="link mr-2"
+                                      placement="top" ngbTooltip="Edit">
+                                      <i class="ti-pencil text-info m-r-10 cursor" ></i>
+                                    </a>
+                                </td>
+                                <td class="justify-content-center">
+                                    Editar
+                                    <a (click)="openModalEdit(editMonitoringModalFour, data, i)" class="link mr-2"
+                                      placement="top" ngbTooltip="Edit">
+                                      <i class="ti-pencil text-info m-r-10 cursor" ></i>
+                                    </a>
+                                </td>
+                                <td class="justify-content-center">
+                                    Editar
+                                    <a (click)="openModalEdit(editMonitoringModalFive, data, i)" class="link mr-2"
+                                      placement="top" ngbTooltip="Edit">
+                                      <i class="ti-pencil text-info m-r-10 cursor" ></i>
+                                    </a>
+                                </td>
+                                <td class="justify-content-center">{{data.createdAt | date:"dd/MM/YY - hh:mm"}}</td>
+                                <td class="justify-content-center">{{data.updatedAt | date:"dd/MM/YY - hh:mm"}}</td>
+                                <td *ngIf="data.is_active; else monitoringDisabled" (click)="changeStatus(data)"><span class="btn btn-rounded btn-success">Activado</span> </td>
+                                <ng-template #monitoringDisabled><td (click)="changeStatus(data)"> <span class="btn btn-rounded btn-danger">Desactivado</span></td> </ng-template>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="d-flex justify-content-center mt-2">    
+                    <ngb-pagination [(page)]="numberPages"
+                    [pageSize]="numberDataShow"
+                    [collectionSize]="monitoringArray.length"
+                    [maxSize]="5"></ngb-pagination>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--- Modal edit Data inicial -->
+<ng-template #editMonitoringModalOne let-modal>
+  
+    <div class="modal-header">
+  
+      <h5 class="modal-title" id="editLabel">Editar datos génericos</h5>
+  
+      <button type="button" class="close" (click)="closeModal()" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+  
+    </div>
+  
+    <div class="modal-body">
+  
+      <form [formGroup]="formEditMonitoring" (ngSubmit)="updateDataMonitoring()">
+        <div class="form-group row">
+            <label for="registry_number" class="col-sm-4 col-form-label">Número de registro</label>
+            <div class="col-sm-8">
+                <input type="text" class="form-control"  formControlName="registry_number" id="registry_number" [attr.disabled]="true">
+                <div class="text-danger mt-2" *ngIf="invalidField('registry_number')">
+                    <p>{{ getErrorMessageEdit("registry_number") }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="departure_date" class="col-sm-4 col-form-label">Fecha de zarpe</label>
+            <div class="col-sm-8">
+                <input type="date" value="departure_date" class="form-control" formControlName="departure_date" id="departure_date">
+                <div class="text-danger mt-2" *ngIf="invalidField('departure_date')">
+                    <p>{{ getErrorMessageEdit("departure_date") }}</p>
+                </div>
+            </div>
+        </div> 
+        <div class="form-group row">
+            <label for="arrival_date" class="col-sm-4 col-form-label">Fecha de arribo</label>
+            <div class="col-sm-8">
+                <input type="date" value="arrival_date" class="form-control" formControlName="arrival_date" id="arrival_date">
+                <div class="text-danger mt-2" *ngIf="invalidField('arrival_date')">
+                    <p>{{ getErrorMessageEdit("arrival_date") }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="site" class="col-sm-4 col-form-label">Sitio de desembarque</label>
+            <div class="col-sm-8">
+                <select class="form-control" formControlName="site" id="site">
+                    <option *ngFor="let item of siteArray" [value]="item._id">{{item.description}}</option>
+                </select>
+                <div class="text-danger mt-2" *ngIf="invalidField('site')">
+                    <p>{{ getErrorMessageEdit("site") }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="zone" class="col-sm-4 col-form-label">Zona de pesca</label>
+            <div class="col-sm-8">
+                <select class="form-control" formControlName="zone" id="zone">
+                    <option *ngFor="let item of zoneArray" [value]="item._id">{{item.description}}</option>
+                </select>
+                <div class="text-danger mt-2" *ngIf="invalidField('zone')">
+                    <p>{{ getErrorMessageEdit("zone") }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="isle" class="col-sm-4 col-form-label">ISLA</label>
+            <div class="col-sm-8">
+                <select class="form-control" formControlName="isle" id="isle">
+                    <option value="SAI">SAI</option>
+                    <option value="PVA">PVA</option>
+                </select>
+                <div class="text-danger mt-2" *ngIf="invalidField('isle')">
+                    <p>{{ getErrorMessageEdit("isle") }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="create_by" class="col-sm-4 col-form-label">Registrador</label>
+            <div class="col-sm-8">
+                <select class="form-control" formControlName="create_by" id="create_by">
+                    <option *ngFor="let item of userArray" [value]="item._id">{{item.email}}</option>
+                </select>
+                <div class="text-danger mt-2" *ngIf="invalidField('create_by')">
+                    <p>{{ getErrorMessageEdit("create_by") }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancelar</button>
+  
+          <button type="submit" class="btn btn-primary">Editar</button>
+        </div>
+      </form>
+    </div>
+</ng-template>
+
+<!--- Modal edit Detalles Unidad Pesca -->
+<ng-template #editMonitoringModalTwo let-modal>
+    <div class="modal-header">
+  
+      <h5 class="modal-title" id="editLabel">Editar detalles sobre la unidad de pesca</h5>
+  
+      <button type="button" class="close" (click)="closeModal()" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+  
+    </div>
+  
+    <div class="modal-body">
+      <form [formGroup]="formEditMonitoring" (ngSubmit)="updateDataMonitoring()">
+        <div class="form-group row">
+            <label for="name_ship" class="col-sm-4 col-form-label">Nombre de la embarcación</label>
+            <div class="col-sm-8">
+                <select class="form-control" formControlName="name_ship" id="name_ship">
+                    <option *ngFor="let item of boatArray" [value]="item._id">{{item.description}}</option>
+                </select>
+                <div class="text-danger mt-2" *ngIf="invalidField('name_ship')">
+                    <p>{{ getErrorMessageEdit("name_ship") }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="pr" class="col-sm-4 col-form-label">P/R</label>
+            <div class="col-sm-8">
+                <select class="form-control" formControlName="pr" id="pr">
+                    <option [value]="true">Habilitado</option>
+                    <option [value]="false">Inhabilitado</option>
+                </select>
+                <div class="text-danger mt-2" *ngIf="invalidField('pr')">
+                    <p>{{ getErrorMessageEdit("pr") }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="type_motor" class="col-sm-4 col-form-label">Tipo de Motor</label>
+            <div class="col-sm-8">
+                <select class="form-control" formControlName="type_motor" id="type_motor">
+                    <option *ngFor="let item of propulsionArray" [value]="item.description">{{item.description}}</option>
+                </select>
+                <div class="text-danger mt-2" *ngIf="invalidField('type_motor')">
+                    <p>{{ getErrorMessageEdit("type_motor") }}</p>
+                </div>
+            </div>
+        </div>      
+        <div class="form-group row">
+            <label for="quantity_motor" class="col-sm-4 col-form-label">Número de Motores</label>
+            <div class="col-sm-8">
+                <input type="number" class="form-control" formControlName="quantity_motor" id="quantity_motor">
+                <div class="text-danger mt-2" *ngIf="invalidField('quantity_motor')">
+                    <p>{{ getErrorMessageEdit("quantity_motor") }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="power" class="col-sm-4 col-form-label">Potencia</label>
+            <div class="col-sm-8">
+                <input type="number" class="form-control" formControlName="power" id="power">
+                <div class="text-danger mt-2" *ngIf="invalidField('power')">
+                    <p>{{ getErrorMessageEdit("power") }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="fishermen_number" class="col-sm-4 col-form-label">N° de pescadores</label>
+            <div class="col-sm-8">
+                <input type="number" class="form-control" formControlName="fishermen_number" id="fishermen_number">
+                <div class="text-danger mt-2" *ngIf="invalidField('fishermen_number')">
+                    <p>{{ getErrorMessageEdit("fishermen_number") }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- NG FOR NUMBER SEALS -->
+        <div class="form-group row">
+            <label for="name_of_fishermen" class="col-sm-4 col-form-label">Pescadores</label>
+            <div class="col-sm-8 select-icon">
+                <select class="form-control" (change)="onChangeFish($event)" id="name_of_fishermen">
+                    <option *ngFor="let data of monitoringArray[posMonitoring].name_of_fishermen; let i=index" [value]="i">{{data.name}}</option>
+                </select>
+                <div class="text-danger mt-2" *ngIf="invalidField('name_of_fishermen')">
+                    <p>{{ getErrorMessageEdit("name_of_fishermen") }}</p>
+                </div>
+                <a (click)="openModalEditNumFishermen(formEditMonitoring, posFishermen)" class="link mr-2 ml-2" [ngClass]="{'disable': posFishermen === undefined}" placement="top" ngbTooltip="Edit">
+                    <i class="ti-pencil m-r-10 cursor" [ngClass]="{'disable': posFishermen === undefined, 'text-info': posFishermen !== undefined}" ></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancelar</button>
+  
+          <button type="submit" class="btn btn-primary">Editar</button>
+        </div>
+      </form>
+    </div>
+</ng-template>
+
+<!--- Modal edit Caracteristicas del arte -->
+<ng-template #editMonitoringModalThree let-modal>
+  
+    <div class="modal-header">
+  
+      <h5 class="modal-title" id="editLabel">Editar actividades dedicadas a la unidad productiva</h5>
+  
+      <button type="button" class="close" (click)="closeModal()" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+  
+    </div>
+  
+    <div class="modal-body">
+  
+      <form [formGroup]="formEditMonitoring" (ngSubmit)="updateDataMonitoring()">
+        <div class="form-group row">    
+            <label for="handLine" class="col-sm-4 col-form-label">Línea de mano</label>
+            <div class="col-sm-8">
+                <label *ngFor="let item of methodArray" class="block"> 
+                    <input type="checkbox" id="{{item.description}}" [value]="item.description" class="form-check-input" [ngClass]="{checked: handLineArray}" (change)="checkInput($event)"> {{ item.description }}
+                </label>
+                <div class="text-danger mt-2" *ngIf="invalidField('handLine')">
+                    <p>{{ getErrorMessageEdit("handLine") }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="nasa" class="col-sm-4 col-form-label">Nasa</label>
+            <div class="col-sm-8">
+                <input type="number" class="form-control" formControlName="nasa" id="nasa">
+                <div class="text-danger mt-2" *ngIf="invalidField('nasa')">
+                    <p>{{ getErrorMessageEdit("nasa") }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="reel_num" class="col-sm-4 col-form-label">Número Reel</label>
+            <div class="col-sm-8">
+                <input type="number" class="form-control" formControlName="reel_num" id="reel_num">
+                <div class="text-danger mt-2" *ngIf="invalidField('reel_num')">
+                    <p>{{ getErrorMessageEdit("reel_num") }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="hook_num" class="col-sm-4 col-form-label">Número de Anzuelos</label>
+            <div class="col-sm-8">
+                <input type="number" class="form-control" formControlName="hook_num" id="hook_num">
+                <div class="text-danger mt-2" *ngIf="invalidField('hook_num')">
+                    <p>{{ getErrorMessageEdit("hook_num") }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="diving" class="col-sm-4 col-form-label">Buceo</label>
+            <div class="col-sm-8">
+                <input type="number" class="form-control" formControlName="diving" id="diving">
+                <div class="text-danger mt-2" *ngIf="invalidField('diving')">
+                    <p>{{ getErrorMessageEdit("diving") }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="departure_time" class="col-sm-4 col-form-label">Hora de salida</label>
+            <div class="col-sm-8">
+                <input type="time" class="form-control"  formControlName="departure_time" id="departure_time">
+                <div class="text-danger mt-2" *ngIf="invalidField('departure_time')">
+                    <p>{{ getErrorMessageEdit("departure_time") }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="arrival_time" class="col-sm-4 col-form-label">Hora de llegada</label>
+            <div class="col-sm-8">
+                <input type="time" class="form-control"  formControlName="arrival_time" id="arrival_time">
+                <div class="text-danger mt-2" *ngIf="invalidField('arrival_time')">
+                    <p>{{ getErrorMessageEdit("arrival_time") }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="schedule" class="col-sm-4 col-form-label">P/R</label>
+            <div class="col-sm-8">
+                <select class="form-control" formControlName="schedule" id="schedule">
+                    <option [value]="true">Día y noche</option>
+                    <option [value]="false">Día</option>
+                </select>
+                <div class="text-danger mt-2" *ngIf="invalidField('schedule')">
+                    <p>{{ getErrorMessageEdit("schedule") }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancelar</button>
+  
+          <button type="submit" class="btn btn-primary">Editar</button>
+        </div>
+      </form>
+    </div>
+</ng-template>
+
+<!--- Modal edit Captura Desembarcada -->
+<ng-template #editMonitoringModalFour let-modal>
+  
+    <div class="modal-header">
+  
+      <h5 class="modal-title" id="editLabel">Editar captura desembarcada</h5>
+  
+      <button type="button" class="close" (click)="closeModal()" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+  
+    </div>
+  
+    <div class="modal-body">
+  
+      <form [formGroup]="formEditMonitoring" (ngSubmit)="updateDataMonitoring()">
+  
+        <div class="form-group row">
+            <label for="landed_catch" class="col-sm-4 col-form-label">Especies</label>
+            <div class="col-sm-8 select-icon">
+                <select class="form-control" (change)="onChange($event)" id="landed_catch">
+                    <option *ngFor="let data of monitoringArray[posMonitoring].landed_catch; let i=index" value="{{ i }}">
+                        {{ data.specie }}
+                    </option>
+                </select>
+                <div class="text-danger mt-2" *ngIf="invalidField('landed_catch')">
+                    <p>{{ getErrorMessageEdit("landed_catch") }}</p>
+                </div>
+                <a (click)="openModalEditLanded(editModalLanded, posLanded)" class="link mr-2 ml-2" [ngClass]="{'disable': posLanded === undefined}" placement="top" ngbTooltip="Edit">
+                    <i class="ti-pencil m-r-10 cursor" [ngClass]="{'disable': posLanded === undefined, 'text-info': posLanded !== undefined}" ></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancelar</button>
+  
+          <button type="submit" class="btn btn-primary">Editar</button>
+        </div>
+      </form>
+    </div>
+</ng-template>
+
+<!--- Modal edit Ultimo Parrafo -->
+<ng-template #editMonitoringModalFive let-modal>
+  
+    <div class="modal-header">
+  
+      <h5 class="modal-title" id="editLabel">Editar gastos finales</h5>
+  
+      <button type="button" class="close" (click)="closeModal()" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+  
+    </div>
+  
+    <div class="modal-body">
+  
+      <form [formGroup]="formEditMonitoring" (ngSubmit)="updateDataMonitoring()">
+        <div class="form-group row">
+            <label for="observation" class="col-sm-4 col-form-label">Observaciones</label>
+            <div class="col-sm-8">
+                <textarea class="form-control textarea" rows="5"  formControlName="observation" id="observation"></textarea>
+                <div class="text-danger mt-2" *ngIf="invalidField('observation')">
+                    <p>{{ getErrorMessageEdit("observation") }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="operating_expense" class="col-sm-4 col-form-label">Gastos de operación</label>
+            <div class="col-sm-8 select-icon">
+                <select class="form-control" (change)="onChange($event)" id="operating_expense">
+                    <option *ngFor="let data of monitoringArray[posMonitoring].operating_expense; let i=index" value="{{i}}">
+                        Gastos de opetación {{ i }}
+                    </option>
+                </select>
+                <div class="text-danger mt-2" *ngIf="invalidField('operating_expense')">
+                    <p>{{ getErrorMessageEdit("operating_expense") }}</p>
+                </div>
+                <a (click)="openModalEditOperatingExpense(editModalOperatingExpense)" class="link mr-2 ml-2" [ngClass]="{'disable': posLanded === undefined}" placement="top" ngbTooltip="Edit">
+                    <i class="ti-pencil m-r-10 cursor" [ngClass]="{'disable': posLanded === undefined, 'text-info': posLanded !== undefined}" ></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancelar</button>
+  
+          <button type="submit" class="btn btn-primary">Editar</button>
+        </div>
+      </form>
+    </div>
+</ng-template>
+
+
+<!--- Modal edit Landed -->
+<ng-template #editModalLanded let-modal>
+  
+    <div class="modal-header">
+  
+      <h5 class="modal-title" id="editLabel">Editar Especie</h5>
+  
+      <button type="button" class="close" (click)="closeModalS()" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+  
+    </div>
+  
+    <div class="modal-body">
+  
+      <form [formGroup]="formEditLanded" (ngSubmit)="saveChangeLanded(formEditLanded.value)">
+
+        <div class="form-group row">
+            <label for="specie" class="col-sm-4 col-form-label">Especie</label>
+            <div class="col-sm-8">
+                <select class="form-control" formControlName="specie" id="specie">
+                    <option *ngFor="let item of specieArray" [value]="item.common_name">{{item.common_name}}</option>
+                </select>
+                <div class="text-danger mt-2" *ngIf="invalidFieldLanded('specie')">
+                    <p>{{ getErrorMessageEditLanded("specie") }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="quantity" class="col-sm-4 col-form-label">Cantidad</label>
+            <div class="col-sm-8">
+                <input type="number" class="form-control"  formControlName="quantity" id="quantity">
+                <div class="text-danger mt-2" *ngIf="invalidFieldLanded('quantity')">
+                    <p>{{ getErrorMessageEditLanded("quantity") }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="status" class="col-sm-4 col-form-label">Estado</label>
+            <div class="col-sm-8">
+                <select class="form-control" formControlName="status" id="status">
+                    <option value="E">Eviscerado</option>
+                    <option value="N">No Eviscerado</option>
+                    <option value="F">Fileteado</option>
+                    <option value="D">Desconchado</option>
+                </select>
+                <div class="text-danger mt-2" *ngIf="invalidFieldLanded('status')">
+                    <p>{{ getErrorMessageEditLanded("status") }}</p>
+                </div>
+            </div>
+        </div> 
+        <div class="form-group row">
+            <label for="weight" class="col-sm-4 col-form-label">Peso (kg)</label>
+            <div class="col-sm-8">
+                <input type="number" class="form-control"  formControlName="weight" id="weight">
+                <div class="text-danger mt-2" *ngIf="invalidFieldLanded('weight')">
+                    <p>{{ getErrorMessageEditLanded("weight") }}</p>
+                </div>
+            </div>
+        </div> 
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeModalS()">Cancelar</button>
+  
+          <button type="submit" class="btn btn-primary">Editar</button>
+        </div>
+      </form>
+    </div>
+</ng-template>
+
+<!--- Modal edit OperatingExpense -->
+<ng-template #editModalOperatingExpense let-modal>
+  
+    <div class="modal-header">
+  
+      <h5 class="modal-title" id="editLabel">Editar Gastos de Operación</h5>
+  
+      <button type="button" class="close" (click)="closeModalS()" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+  
+    </div>
+  
+    <div class="modal-body">
+  
+      <form [formGroup]="formEditOperatingExpense" (ngSubmit)="saveChangeOperatingExpense(formEditOperatingExpense.value)">
+        <div class="form-group row">
+            <label for="gasoline_oneday" class="col-sm-4 col-form-label">Gasolina 1 Día (Gl.)</label>
+            <div class="col-sm-8">
+                <input type="number" class="form-control"  formControlName="gasoline_oneday" id="gasoline_oneday">
+                <div class="text-danger mt-2" *ngIf="invalidFieldOperatingExpense('gasoline_oneday')">
+                    <p>{{ getErrorMessageEditOperatingExpense("gasoline_oneday") }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="other_oneday" class="col-sm-4 col-form-label">Otros ($)</label>
+            <div class="col-sm-8">
+                <input type="number" class="form-control"  formControlName="other_oneday" id="other_oneday">
+                <div class="text-danger mt-2" *ngIf="invalidFieldOperatingExpense('other_oneday')">
+                    <p>{{ getErrorMessageEditOperatingExpense("other_oneday") }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="groceries_higherday" class="col-sm-4 col-form-label">Viveres</label>
+            <div class="col-sm-8">
+                <input type="number" class="form-control"  formControlName="groceries_higherday" id="groceries_higherday">
+                <div class="text-danger mt-2" *ngIf="invalidFieldOperatingExpense('groceries_higherday')">
+                    <p>{{ getErrorMessageEditOperatingExpense("groceries_higherday") }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="ice_higherday" class="col-sm-4 col-form-label">Hielo</label>
+            <div class="col-sm-8">
+                <input type="number" class="form-control"  formControlName="ice_higherday" id="ice_higherday">
+                <div class="text-danger mt-2" *ngIf="invalidFieldOperatingExpense('ice_higherday')">
+                    <p>{{ getErrorMessageEditOperatingExpense("ice_higherday") }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="gasoline_higherday" class="col-sm-4 col-form-label">Combustible</label>
+            <div class="col-sm-8">
+                <input type="number" class="form-control"  formControlName="gasoline_higherday" id="gasoline_higherday">
+                <div class="text-danger mt-2" *ngIf="invalidFieldOperatingExpense('gasoline_higherday')">
+                    <p>{{ getErrorMessageEditOperatingExpense("gasoline_higherday") }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="bait_higherday" class="col-sm-4 col-form-label">Carnada</label>
+            <div class="col-sm-8">
+                <input type="number" class="form-control"  formControlName="bait_higherday" id="bait_higherday">
+                <div class="text-danger mt-2" *ngIf="invalidFieldOperatingExpense('bait_higherday')">
+                    <p>{{ getErrorMessageEditOperatingExpense("bait_higherday") }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeModalS()">Cancelar</button>
+  
+          <button type="submit" class="btn btn-primary">Editar</button>
+        </div>
+      </form>
+    </div>
+</ng-template>

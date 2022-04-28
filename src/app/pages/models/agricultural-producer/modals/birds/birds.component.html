@@ -1,0 +1,55 @@
+<div class="modal-header">
+    <h5 class="modal-title" id="editLabel">Editar Aves</h5>
+    <button type="button" class="close" (click)="closeModal()" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
+<div class="modal-body">
+    <form [formGroup]="formEditBird" (ngSubmit)="saveChange()">
+        <div class="form-group row">
+            <div>
+                <label for="dual_purpose_number" class="col-sm-10 col-form-label"># Ponederas</label>
+                <div class="col-sm-10">
+                    <input type="number" class="form-control"  formControlName="dual_purpose_number" id="dual_purpose_number">
+                    <div class="text-danger mt-2" *ngIf="invalidField('dual_purpose_number')">
+                        <p>{{ getErrorMessageEdit("dual_purpose_number") }}</p>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <label for="fattening_number" class="col-sm-10 col-form-label"># Engorde</label>
+                <div class="col-sm-10">
+                    <input type="number" class="form-control"  formControlName="fattening_number" id="fattening_number">
+                    <div class="text-danger mt-2" *ngIf="invalidField('fattening_number')">
+                        <p>{{ getErrorMessageEdit("fattening_number") }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div>
+                <label for="number_of_layers" class="col-sm-10 col-form-label"># Doble Proposito</label>
+                <div class="col-sm-10">
+                    <input type="number" class="form-control"  formControlName="number_of_layers" id="number_of_layers">
+                    <div class="text-danger mt-2" *ngIf="invalidField('number_of_layers')">
+                        <p>{{ getErrorMessageEdit("number_of_layers") }}</p>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <label for="number_of_roosters" class="col-sm-10 col-form-label"># Gallos</label>
+                <div class="col-sm-10">
+                    <input type="number" class="form-control"  formControlName="number_of_roosters" id="number_of_roosters">
+                    <div class="text-danger mt-2" *ngIf="invalidField('number_of_roosters')">
+                        <p>{{ getErrorMessageEdit("number_of_roosters") }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancelar</button>
+            <button type="submit" class="btn btn-primary">Editar</button>
+        </div>
+    </form>
+</div>

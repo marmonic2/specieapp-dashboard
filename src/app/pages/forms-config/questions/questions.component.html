@@ -1,0 +1,364 @@
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title mb-0">Tabla de Preguntas </h4>
+                <div class="d-md-flex mt-3">
+                    <input type="text" name="search" placeholder="Buscar pregunta" class="form-control w-auto" (input)="filterQuestion($event)" />
+                    <button type="button"  class="btn btn-primary ml-auto" (click)="openModal(modalAddQuestion)"><i class="fas fa-plus"></i> Agregar Pregunta</button>
+                    <button *ngIf="id_view === 0" type="button" class="btn btn-danger ml-1" (click)='giveDataOff(false)'>
+                        <i class="fas fa-minus-circle" name="Inhabilitados"></i> 
+                    </button>
+                    <button *ngIf="id_view !== 0" type="button" class="btn btn-success ml-1" (click)='giveDataOff(true)'>
+                        <i class="fas fa-check-circle" name="Habilitados"></i> 
+                    </button>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-striped no-wrap border mt-4">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Pregunta</th>
+                                <th>Sección Asociada</th>
+                                <th>Descripción</th>
+                                <th>Tipo de Input</th>
+                                <th>Data Input</th>
+                                <th>Mínimo</th>
+                                <th>Máximo</th>
+                                <th>Tipo de Dato</th>
+                                <th>Requerido</th>
+                                <th>Fecha de Creación</th>
+                                <th>Fecha de Actualización</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let data of questionArray | slice: (numberPages-1) * numberDataShow : (numberPages-1) * numberDataShow + numberDataShow">
+                                <td class="justify-content-center">{{getPositionQuestion(data._id)}}</td>
+                                <td class="justify-content-center">{{data.nameQuestion}}</td>
+                                <td class="justify-content-center">{{data.section_form.description}}</td>
+                                <td class="justify-content-center">{{data.description}}</td>
+                                <td class="justify-content-center">{{data.widget_type}}</td>
+                                <!-- <td class="justify-content-center" *ngIf="data.data.length !== 0">{{filtroDataMaximus(data.data, data.nameQuestion)}}</td> -->
+                                <td class="justify-content-center" *ngIf="data.data.length !== 0">
+                                    <div *ngFor="let item of data.data">
+                                        {{item.descriptionData}}
+                                    </div>
+                                </td>
+                                <td class="justify-content-center" *ngIf="data.data.length === 0">No aplica</td>
+                                <td class="justify-content-center">{{data.min}}</td>
+                                <td class="justify-content-center">{{data.max}}</td>
+                                <td class="justify-content-center">{{data.dataType}}</td>
+                                <td class="justify-content-center"><i class="{{data.required ? 'fas fa-check-circle text-success' : 'fas fa-minus-circle text-danger'}}"></i></td>
+                                <td class="justify-content-center">{{data.createdAt | date:"dd/MM/YY - hh:mm"}}</td>
+                                <td class="justify-content-center">{{data.updatedAt | date:"dd/MM/YY - hh:mm"}}</td>
+                                <td *ngIf="data.is_active; else questionDisabled" (click)="changeStatus(data)"><span class="btn btn-rounded btn-success">Activado</span> </td>
+                                <ng-template #questionDisabled><td (click)="changeStatus(data)"> <span class="btn btn-rounded btn-danger">Desactivado</span></td> </ng-template>
+                                <td>
+                                    <a (click)="openModalEdit(editQuestionModal, data)" class="link mr-2"
+                                      placement="top" ngbTooltip="Edit">
+                                      <i class="ti-pencil text-info m-r-10 cursor" ></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="d-flex justify-content-center mt-2">    
+                    <ngb-pagination [(page)]="numberPages"
+                    [pageSize]="numberDataShow"
+                    [collectionSize]="questionArray.length"
+                    [maxSize]="5"></ngb-pagination>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--- Modal add question -->
+
+<ng-template #modalAddQuestion let-modal>
+
+    <div class="modal-header">
+        <h5 class="modal-title" id="addLabel">Agregar Pregunta</h5>
+        <button type="button" class="close" (click)="closeModal()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
+    <div class="modal-body">
+        <form [formGroup]="formQuestion" (ngSubmit)="saveDataQuestion()">
+            <div class="form-group row">
+                <label for="section_form" class="col-sm-4 col-form-label">Sección asociada</label>
+                <div class="col-sm-8">
+                    <select class="form-control" formControlName="section_form" id="section_form">
+                        <option *ngFor="let item of sectionArray" [value]="item._id">{{item.description}}</option>
+                    </select>
+                    <div class="text-danger mt-2" *ngIf="invalidField('section_form')">
+                        <p>{{ getErrorMessage("section_form") }}</p>
+                    </div>
+                </div>
+            </div> 
+            <div class="form-group row">
+                <label for="nameQuestion" class="col-sm-4 col-form-label">Pregunta Asociada</label>
+                <div class="col-sm-8">
+                    <select class="form-control" formControlName="nameQuestion" id="nameQuestion">
+                        <optgroup label="Mediciones">
+                            <option *ngFor="let item of questionNameArray.measurement_data" [value]="item">{{item}}</option>
+                        </optgroup> 
+                        <optgroup label="Control de Pesos">
+                            <option *ngFor="let item of questionNameArray.weight_check" [value]="item">{{item}}</option>
+                        </optgroup> 
+                        <optgroup label="Actividades">
+                            <option *ngFor="let item of questionNameArray.activitie" [value]="item">{{item}}</option>
+                        </optgroup> 
+                        <optgroup label="Desembarco">
+                            <option *ngFor="let item of questionNameArray.monitoring" [value]="item">{{item}}</option>
+                        </optgroup> 
+                        <optgroup label="Desembarco Industrial">
+                            <option *ngFor="let item of questionNameArray.industrial_vessel" [value]="item">{{item}}</option>
+                        </optgroup> 
+                        <optgroup label="Productores Agropecuarios">
+                            <option *ngFor="let item of questionNameArray.agricultural_producer" [value]="item">{{item}}</option>
+                        </optgroup> 
+                        <optgroup label="Costos e Ingresos">
+                            <option *ngFor="let item of questionNameArray.cost_and_income" [value]="item">{{item}}</option>
+                        </optgroup>
+                        <optgroup label="Precios Agrícolas">
+                            <option *ngFor="let item of questionNameArray.monitoring_agricultural" [value]="item">{{item}}</option>
+                        </optgroup>
+                        <!-- <optgroup label="Parte Desembarco Industrial">
+                            <option *ngFor="let item of questionNameArray.data_nine_industrial" [value]="item">{{item}}</option>
+                        </optgroup>
+                        <optgroup label="Parte Agro Tercero">
+                            <option *ngFor="let item of questionNameArray.data_form_3_agro" [value]="item">{{item}}</option>
+                        </optgroup> -->
+                    </select>
+                    <div class="text-danger mt-2" *ngIf="invalidField('nameQuestion')">
+                        <p>{{ getErrorMessage("nameQuestion") }}</p>
+                    </div>
+                </div>
+            </div> 
+            <div class="form-group row">
+                <label for="description" class="col-sm-4 col-form-label">Descripción</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" formControlName="description" id="description">
+                    <div class="text-danger mt-2" *ngIf="invalidField('description')">
+                        <p>{{ getErrorMessage("description") }}</p>
+                    </div>
+                </div>
+            </div> 
+            <div class="form-group row">
+                <label for="widget_type" class="col-sm-4 col-form-label">Tipo de Input</label>
+                <div class="col-sm-8">
+                    <select class="form-control" formControlName="widget_type" id="widget_type" (change)="changeSelect($event.target.value)">
+                        <option *ngFor="let item of inputTypeArray" [value]="item">{{item}}</option>
+                    </select>
+                    <div class="text-danger mt-2" *ngIf="invalidField('widget_type')">
+                        <p>{{ getErrorMessage("widget_type") }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row" *ngIf="inputDataType">
+                <label for="dataType" class="col-sm-4 col-form-label">Tipo de dato</label>
+                <div class="col-sm-8">
+                    <select class="form-control" formControlName="dataType" id="dataType" (change)="changeSelectTwo($event.target.value)">
+                        <option *ngFor="let item of dataTypeArray" [value]="item">{{item}}</option>
+                    </select>
+                    <div class="text-danger mt-2" *ngIf="invalidField('dataType')">
+                        <p>{{ getErrorMessage("dataType") }}</p>
+                    </div>
+                </div>
+            </div> 
+            <div class="form-group row" *ngIf="inputDataStatus">
+                <label for="min" class="col-sm-4 col-form-label">Mínimo</label>
+                <div class="col-sm-8">
+                    <input type="number" class="form-control" formControlName="min" id="min" (keypress)="keyboardDisabled($event.charCode)">
+                    <div class="text-danger mt-2" *ngIf="invalidField('min')">
+                        <p>{{ getErrorMessage("min") }}</p>
+                    </div>
+                </div>
+            </div> 
+            <div class="form-group row" *ngIf="inputDataStatus">
+                <label for="max" class="col-sm-4 col-form-label">Máximo</label>
+                <div class="col-sm-8">
+                    <input type="number" class="form-control" formControlName="max" id="max" (keypress)="keyboardDisabled($event.charCode)">
+                    <div class="text-danger mt-2" *ngIf="invalidField('max')">
+                        <p>{{ getErrorMessage("max") }}</p>
+                    </div>
+                </div>
+            </div> 
+            <div class="form-group row">
+                <label class="col-sm-4 col-form-label">Requerido</label>
+                <div class="col-sm-8">
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" formControlName="required" id="true" [value]="true">
+                        <label class="form-check-label" for="true">Verdadero</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" formControlName="required" id="false" [value]="false">
+                        <label class="form-check-label" for="inlineRadio2">Falso</label>
+                    </div>
+                    <div class="text-danger mt-2" *ngIf="invalidField('required')">
+                        <p>{{ getErrorMessage("required") }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-dark" (click)="closeModal()">Cerrar</button>
+                <button type="submit" class="btn btn-primary">Agregar</button>
+            </div>
+        </form>
+    </div>
+
+</ng-template>
+
+
+<!--- Modal edit questions -->
+<ng-template #editQuestionModal let-modal>
+  
+    <div class="modal-header">
+  
+      <h5 class="modal-title" id="editLabel">Editar Pregunta</h5>
+  
+      <button type="button" class="close" (click)="closeModal()" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+  
+    </div>
+  
+    <div class="modal-body">
+  
+      <form [formGroup]="formEditQuestion" (ngSubmit)="updateDataQuestion()">
+  
+        <div class="form-group row">
+            <label for="section_form" class="col-sm-4 col-form-label">Sección asociada</label>
+            <div class="col-sm-8">
+                <select class="form-control" formControlName="section_form" id="section_form">
+                    <option *ngFor="let item of sectionArray" [value]="item._id">{{item.description}}</option>
+                </select>
+                <div class="text-danger mt-2" *ngIf="invalidFieldE('section_form')">
+                    <p>{{ getErrorMessageEdit("section_form") }}</p>
+                </div>
+            </div>
+        </div> 
+        <div class="form-group row">
+            <label for="nameQuestion" class="col-sm-4 col-form-label">Pregunta Asociada</label>
+            <div class="col-sm-8">
+                <select class="form-control" formControlName="nameQuestion" id="nameQuestion">
+                    <optgroup label="Mediciones">
+                        <option *ngFor="let item of questionNameArray.measurement_data" [value]="item">{{item}}</option>
+                    </optgroup> 
+                    <optgroup label="Control de Pesos">
+                        <option *ngFor="let item of questionNameArray.weight_check" [value]="item">{{item}}</option>
+                    </optgroup> 
+                    <optgroup label="Actividades">
+                        <option *ngFor="let item of questionNameArray.activitie" [value]="item">{{item}}</option>
+                    </optgroup> 
+                    <optgroup label="Desembarco">
+                        <option *ngFor="let item of questionNameArray.monitoring" [value]="item">{{item}}</option>
+                    </optgroup>
+                    <optgroup label="Desembarco Industrial">
+                        <option *ngFor="let item of questionNameArray.industrial_vessel" [value]="item">{{item}}</option>
+                    </optgroup>
+                    <optgroup label="Productores Agropecuarios">
+                        <option *ngFor="let item of questionNameArray.agricultural_producer" [value]="item">{{item}}</option>
+                    </optgroup>
+                    <optgroup label="Costos e Ingresos">
+                        <option *ngFor="let item of questionNameArray.cost_and_income" [value]="item">{{item}}</option>
+                    </optgroup>
+                    <optgroup label="Precios Agrícolas">
+                        <option *ngFor="let item of questionNameArray.monitoring_agricultural" [value]="item">{{item}}</option>
+                    </optgroup>
+                    <!-- <optgroup label="Parte Desembarco Industrial">
+                        <option *ngFor="let item of questionNameArray.data_nine_industrial" [value]="item">{{item}}</option>
+                    </optgroup>
+                    <optgroup label="Parte Agro Tercero">
+                        <option *ngFor="let item of questionNameArray.data_form_3_agro" [value]="item">{{item}}</option>
+                    </optgroup> -->
+                </select>
+                <div class="text-danger mt-2" *ngIf="invalidFieldE('nameQuestion')">
+                    <p>{{ getErrorMessageEdit("nameQuestion") }}</p>
+                </div>
+            </div>
+        </div> 
+        <div class="form-group row">
+            <label for="description" class="col-sm-4 col-form-label">Descripción</label>
+            <div class="col-sm-8">
+                <input type="text" class="form-control" formControlName="description" id="description">
+                <div class="text-danger mt-2" *ngIf="invalidFieldE('description')">
+                    <p>{{ getErrorMessageEdit("description") }}</p>
+                </div>
+            </div>
+        </div> 
+        <div class="form-group row">
+            <label for="widget_type" class="col-sm-4 col-form-label">Tipo de Input</label>
+            <div class="col-sm-8">
+                <select class="form-control" formControlName="widget_type" id="widget_type" (change)="changeSelect($event.target.value)">
+                    <option *ngFor="let item of inputTypeArray" [value]="item">{{item}}</option>
+                </select>
+                <div class="text-danger mt-2" *ngIf="invalidFieldE('widget_type')">
+                    <p>{{ getErrorMessageEdit("widget_type") }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group row" *ngIf="inputDataType">
+            <label for="dataType" class="col-sm-4 col-form-label">Tipo de dato</label>
+            <div class="col-sm-8">
+                <select class="form-control" formControlName="dataType" id="dataType" (change)="changeSelectTwo($event.target.value)">
+                    <option *ngFor="let item of dataTypeArray" [value]="item">{{item}}</option>
+                </select>
+                <div class="text-danger mt-2" *ngIf="invalidFieldE('dataType')">
+                    <p>{{ getErrorMessageEdit("dataType") }}</p>
+                </div>
+            </div>
+        </div>  
+        <div class="form-group row" *ngIf="inputDataStatus">
+            <label for="min" class="col-sm-4 col-form-label">Mínimo</label>
+            <div class="col-sm-8">
+                <input type="number" class="form-control" formControlName="min" id="min" (keypress)="keyboardDisabled($event.charCode)">
+                <div class="text-danger mt-2" *ngIf="invalidFieldE('min')">
+                    <p>{{ getErrorMessageEdit("min") }}</p>
+                </div>
+            </div>
+        </div> 
+        <div class="form-group row" *ngIf="inputDataStatus">
+            <label for="max" class="col-sm-4 col-form-label">Máximo</label>
+            <div class="col-sm-8">
+                <input type="number" class="form-control" formControlName="max" id="max" (keypress)="keyboardDisabled($event.charCode)">
+                <div class="text-danger mt-2" *ngIf="invalidFieldE('max')">
+                    <p>{{ getErrorMessageEdit("max") }}</p>
+                </div>
+            </div>
+        </div> 
+        <div class="form-group row">
+            <label for="required" class="col-sm-4 col-form-label">Requerido</label>
+            <div class="col-sm-8">
+                <div class="col-sm-8">
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" formControlName="required" id="true" [value]="true">
+                        <label class="form-check-label" for="true">True</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" formControlName="required" id="false" [value]="false">
+                        <label class="form-check-label" for="inlineRadio2">False</label>
+                    </div>
+                    <div class="text-danger mt-2" *ngIf="invalidFieldE('required')">
+                        <p>{{ getErrorMessageEdit("required") }}</p>
+                    </div>
+                </div>
+            </div>
+        </div> 
+        
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancelar</button>
+  
+          <button type="submit" class="btn btn-primary">Editar</button>
+        </div>
+      </form>
+    </div>
+</ng-template>

@@ -1,0 +1,258 @@
+<!-- Modal edit general information -->
+<div class="modal-header">
+  
+    <h5 class="modal-title" id="editLabel">Editar información general</h5>
+
+    <button type="button" class="close" (click)="closeModal()" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+
+  </div>
+
+  <div class="modal-body">
+    <form [formGroup]="formEditGeneralInformation" (ngSubmit)="saveChangeGeneralInformation()">
+        <div class="form-group row">
+            <label for="register_number" class="col-sm-4 col-form-label">Número de registro</label>
+            <div class="col-sm-8">
+                <input type="text" class="form-control"  formControlName="register_number" id="register_number" [attr.disabled]="true">
+                <div class="text-danger mt-2" *ngIf="invalidFieldGeneralInformation('register_number')">
+                    <p>{{ getErrorMessageEditGeneralInformation("register_number") }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="arrival_date" class="col-sm-4 col-form-label">Fecha de Arribo</label>
+            <div class="col-sm-8">
+                <input type="date" value="arrival_date" class="form-control" formControlName="arrival_date" id="arrival_date">
+                <div class="text-danger mt-2" *ngIf="invalidFieldGeneralInformation('arrival_date')">
+                    <p>{{ getErrorMessageEdit("arrival_date") }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="sailing_date" class="col-sm-4 col-form-label">Fecha de Zarpe</label>
+            <div class="col-sm-8">
+                <input type="date" value="sailing_date" class="form-control" formControlName="sailing_date" id="sailing_date">
+                <div class="text-danger mt-2" *ngIf="invalidFieldGeneralInformation('sailing_date')">
+                    <p>{{ getErrorMessageEdit("sailing_date") }}</p>
+                </div>
+            </div>
+        </div>
+        <!-- NG FOR BOATS -->
+        <div class="form-group row">
+            <label for="boat_name" class="col-sm-4 col-form-label">Nombre de embarcación</label>
+            <div class="col-sm-8">
+                <select class="form-control" formControlName="boat_name" id="boat_name">
+                    <option *ngFor="let item of boatArray" [value]="item._id">{{item.description}}</option>
+                </select>
+                <div class="text-danger mt-2" *ngIf="invalidFieldGeneralInformation('boat_name')">
+                    <p>{{ getErrorMessageEditGeneralInformation("boat_name") }}</p>
+                </div>
+            </div>
+        </div>
+        <!-- NG FOR USER -->
+        <div class="form-group row">
+            <label for="captain_name" class="col-sm-4 col-form-label">Nombre del Capitán</label>
+            <div class="col-sm-8">
+                <select class="form-control" formControlName="captain_name" id="captain_name">
+                    <option *ngFor="let item of userArray" [value]="item._id">{{item.email}}</option>
+                </select>
+                <div class="text-danger mt-2" *ngIf="invalidFieldGeneralInformation('captain_name')">
+                    <p>{{ getErrorMessageEditGeneralInformation("captain_name") }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="expiration_date" class="col-sm-4 col-form-label">Fecha de vencimiento</label>
+            <div class="col-sm-8">
+                <input type="date" value="expiration_date" class="form-control" formControlName="expiration_date" id="expiration_date">
+                <div class="text-danger mt-2" *ngIf="invalidFieldGeneralInformation('expiration_date')">
+                    <p>{{ getErrorMessageEdit("expiration_date") }}</p>
+                </div>
+            </div>
+        </div>
+        <!-- NG FOR USER -->
+        <div class="form-group row">
+            <label for="field_recorder" class="col-sm-4 col-form-label">Registrador de campo</label>
+            <div class="col-sm-8">
+                <select class="form-control" formControlName="field_recorder" id="field_recorder">
+                    <option *ngFor="let item of userArray" [value]="item._id">{{item.email}}</option>
+                </select>
+                <div class="text-danger mt-2" *ngIf="invalidFieldGeneralInformation('field_recorder')">
+                    <p>{{ getErrorMessageEditGeneralInformation("field_recorder") }}</p>
+                </div>
+            </div>
+        </div>
+        <!-- NG FOR SITE -->
+        <div class="form-group row">
+            <label for="landing_site" class="col-sm-4 col-form-label">Sitio de desembarque</label>
+            <div class="col-sm-8">
+                <select class="form-control" formControlName="landing_site" id="landing_site">
+                    <option *ngFor="let item of siteArray" [value]="item._id">{{item.description}}</option>
+                </select>
+                <div class="text-danger mt-2" *ngIf="invalidFieldGeneralInformation('landing_site')">
+                    <p>{{ getErrorMessageEditGeneralInformation("landing_site") }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SELECT TRIPULANTES -->
+        <div class="form-group center">
+            <label for="general_information" class="col-sm-6 col-form-label">Número de tripulantes</label>
+            <a (click)="openModalEditCrew(editCrewModal)" class="link mr-2 ml-2" [ngClass]="{'disable': posIncome === undefined}" placement="top" ngbTooltip="Edit">
+                <i class="ti-pencil text-info m-r-10 cursor" [ngClass]="{'disable': posIncome === undefined, 'text-info': posIncome !== undefined}"></i>
+            </a>
+        </div>
+        <!-- SELECT PESCADORES -->
+        <div class="form-group center">
+            <label for="general_information" class="col-sm-6 col-form-label">Número de pescadores</label>
+            <a (click)="openModalEditFishermen(editFishermenModal)" class="link mr-2 ml-2" [ngClass]="{'disable': posIncome === undefined}" placement="top" ngbTooltip="Edit">
+                <i class="ti-pencil text-info m-r-10 cursor" [ngClass]="{'disable': posIncome === undefined, 'text-info': posIncome !== undefined}"></i>
+            </a>
+        </div>
+        <div class="form-group row">
+            <label for="patent_number" class="col-sm-4 col-form-label">Número patente</label>
+            <div class="col-sm-8">
+                <input type="text" class="form-control"  formControlName="patent_number" id="patent_number">
+                <div class="text-danger mt-2" *ngIf="invalidFieldGeneralInformation('patent_number')">
+                    <p>{{ getErrorMessageEditGeneralInformation("patent_number") }}</p>
+                </div>
+            </div>
+        </div>
+        <!-- NG FOR USER -->
+        <div class="form-group row">
+            <label for="permit_holder" class="col-sm-4 col-form-label">Titular del permiso</label>
+            <div class="col-sm-8">
+                <select class="form-control" formControlName="permit_holder" id="permit_holder">
+                    <option *ngFor="let item of userArray" [value]="item._id">{{item.email}}</option>
+                </select>
+                <div class="text-danger mt-2" *ngIf="invalidFieldGeneralInformation('permit_holder')">
+                    <p>{{ getErrorMessageEditGeneralInformation("permit_holder") }}</p>
+                </div>
+            </div>
+        </div>
+        <!-- CHECKBOX -->
+        <div class="form-group row">
+            <label for="type_fishshop" class="col-sm-4 col-form-label">Tipo de pesquería</label>
+            <div class="col-sm-8">
+                <select class="form-control" formControlName="type_fishshop" id="type_fishshop">
+                    <option value="Caracol">Caracol</option>
+                    <option value="Langosta">Langosta</option>
+                    <option value="Pesca blanca">Pesca blanca</option>
+                </select>
+                <div class="text-danger mt-2" *ngIf="invalidFieldGeneralInformation('type_fishshop')">
+                    <p>{{ getErrorMessageEditGeneralInformation("type_fishshop") }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancelar</button>
+
+            <button type="submit" class="btn btn-primary">Editar</button>
+        </div>
+    </form>
+</div>
+
+<!--- Modal edit Crew -->
+<ng-template #editCrewModal let-modal>
+
+    <div class="modal-header">
+  
+      <h5 class="modal-title" id="editLabel">Tripulantes</h5>
+  
+      <button type="button" class="close" (click)="closeModalS()" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+  
+    </div>
+  
+    <div class="modal-body">
+        <form [formGroup]="formEditCrew" (ngSubmit)="saveChangeCrew()">
+            <div class="form-group row">
+                <label for="number_crew_resident" class="col-sm-4 col-form-label">Residentes</label>
+                <div class="col-sm-8">
+                    <input type="number" class="form-control"  formControlName="number_crew_resident" id="number_crew_resident" (keypress)="keyboardDisabled($event.charCode)">
+                    <div class="text-danger mt-2" *ngIf="invalidFieldCrew('number_crew_resident')">
+                        <p>{{ getErrorMessageEditCrew("number_crew_resident") }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="number_crew_foreign" class="col-sm-4 col-form-label">Extranjeros</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control"  formControlName="number_crew_foreign" id="number_crew_foreign" (keypress)="keyboardDisabled($event.charCode)">
+                    <div class="text-danger mt-2" *ngIf="invalidFieldCrew('number_crew_foreign')">
+                        <p>{{ getErrorMessageEditCrew("number_crew_foreign") }}</p>
+                    </div>
+                </div>
+            </div>            
+            <div class="form-group row">
+                <label for="number_crew_continental" class="col-sm-4 col-form-label">Continentales</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control"  formControlName="number_crew_continental" id="number_crew_continental" (keypress)="keyboardDisabled($event.charCode)">
+                    <div class="text-danger mt-2" *ngIf="invalidFieldCrew('number_crew_continental')">
+                        <p>{{ getErrorMessageEditCrew("number_crew_continental") }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" (click)="closeModalS()">Cancelar</button>
+      
+              <button type="submit" class="btn btn-primary">Editar</button>
+            </div>
+       </form>
+    </div>
+</ng-template>
+
+<!--- Modal edit Fishermen -->
+<ng-template #editFishermenModal let-modal>
+
+    <div class="modal-header">
+  
+      <h5 class="modal-title" id="editLabel">Pescadores</h5>
+  
+      <button type="button" class="close" (click)="closeModalS()" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+  
+    </div>
+  
+    <div class="modal-body">
+        <form [formGroup]="formEditFishermen" (ngSubmit)="saveChangeFishermen()">
+            <div class="form-group row">
+                <label for="number_fishermen_resident" class="col-sm-4 col-form-label">Residentes</label>
+                <div class="col-sm-8">
+                    <input type="number" class="form-control"  formControlName="number_fishermen_resident" id="number_fishermen_resident" (keypress)="keyboardDisabled($event.charCode)">
+                    <div class="text-danger mt-2" *ngIf="invalidFieldFishermen('number_fishermen_resident')">
+                        <p>{{ getErrorMessageEditFishermen("number_fishermen_resident") }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="number_fishermen_foreign" class="col-sm-4 col-form-label">Extranjeros</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control"  formControlName="number_fishermen_foreign" id="number_fishermen_foreign" (keypress)="keyboardDisabled($event.charCode)">
+                    <div class="text-danger mt-2" *ngIf="invalidFieldFishermen('number_fishermen_foreign')">
+                        <p>{{ getErrorMessageEditFishermen("number_fishermen_foreign") }}</p>
+                    </div>
+                </div>
+            </div>            
+            <div class="form-group row">
+                <label for="number_fishermen_continental" class="col-sm-4 col-form-label">Continentales</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control"  formControlName="number_fishermen_continental" id="number_fishermen_continental" (keypress)="keyboardDisabled($event.charCode)">
+                    <div class="text-danger mt-2" *ngIf="invalidFieldFishermen('number_fishermen_continental')">
+                        <p>{{ getErrorMessageEditFishermen("number_fishermen_continental") }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" (click)="closeModalS()">Cancelar</button>
+      
+              <button type="submit" class="btn btn-primary">Editar</button>
+            </div>
+       </form>
+    </div>
+</ng-template>

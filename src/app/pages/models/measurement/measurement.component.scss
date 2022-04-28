@@ -1,0 +1,11 @@
+.select-icon {
+    display: flex;
+    align-items: center;
+}
+
+.disable { 
+    pointer-events: none; 
+    cursor: default; 
+    color: rgba(160, 149, 149, 0.459);
+}
+

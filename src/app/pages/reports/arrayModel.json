@@ -1,0 +1,52 @@
+{ 
+    "activitie": [
+      "ninguna"
+    ],
+    "measurement": [
+      "measured_specie"
+    ],
+    "monitoring": [
+      "landed_catch",
+      "operating_expense"
+    ],
+    "weight-check": [
+      "weight_check_specie"
+    ],
+    "industrial-vessel-inspection": [
+        "register_number",
+        "type_fishshop",
+        "landing_site", 
+        "arrival_date", 
+        "sailing_date", 
+        "boat_name", 
+        "captain_name", 
+        "permit_holder", 
+        "patent_number", 
+        "expiration_date", 
+        "field_recorder", 
+        "number_fishermen_resident", 
+        "number_fishermen_foreign", 
+        "number_fishermen_continental", 
+        "number_crew_resident", 
+        "number_crew_foreign", 
+        "number_crew_continental"
+    ],
+    "agricultural-producer-form": [
+      "surface",
+      "crops_produced",
+      "livestock_inventory"
+    ],
+    "costs-and-income": [
+      "production_expenses",
+      "cultivation_sales",
+      "total_product_sales",
+      "income_different_products"
+    ],
+    "monitoring-agricultural-prices": [
+      "vegetables",
+      "tubers",
+      "grains",
+      "meats",
+      "processed_products"
+    ]
+  }

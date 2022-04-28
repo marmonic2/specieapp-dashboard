@@ -1,0 +1,345 @@
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title mb-0">Tabla de Control de peso</h4>
+                <div class="d-md-flex mt-3">
+                    <input type="text" name="search" placeholder="Buscar control de peso" class="form-control w-auto" (input)="filterWeightCheck($event)" />
+                    <button *ngIf="id_view === 0" type="button" class="btn btn-danger ml-1" (click)='giveDataOff(false)'>
+                        <i class="fas fa-minus-circle" name="Inhabilitados"></i> 
+                    </button>
+                    <button *ngIf="id_view !== 0" type="button" class="btn btn-success ml-1" (click)='giveDataOff(true)'>
+                        <i class="fas fa-check-circle" name="Habilitados"></i> 
+                    </button>   
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-striped no-wrap border mt-4">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Motonave</th>
+                                <th>Lugar</th>
+                                <th>Especie Total</th>
+                                <th>Creado por</th>
+                                <th>Fecha de Registro</th>
+                                <th>Fecha de Creación</th>
+                                <th>Fecha de Actualización</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let data of weightCheckArray | slice: (numberPages-1) * numberDataShow : (numberPages-1) * numberDataShow + numberDataShow; let i = index">
+                                <td class="justify-content-center">{{getPositionWeightCheck(data._id)}}</td>
+                                <td class="justify-content-center">{{filtroDataMaximus(data.motorShip, boatArray, 0)}}</td>
+                                <td class="justify-content-center">{{filtroDataMaximus(data.place, siteArray, 0)}}</td>
+                                <td class="justify-content-center">
+                                    <div *ngFor="let item of data.weight_check_specie">
+                                        {{item.specie}}
+                                    </div>
+                                </td>
+                                <td class="justify-content-center">{{filtroDataMaximus(data.create_by._id, userArray, 1)}}</td>
+                                <td class="justify-content-center">{{data.issue_date | date:"dd/MM/YY - hh:mm"}}</td>
+                                <td class="justify-content-center">{{data.createdAt | date:"dd/MM/YY - hh:mm"}}</td>
+                                <td class="justify-content-center">{{data.updatedAt | date:"dd/MM/YY - hh:mm"}}</td>
+                                <td *ngIf="data.is_active; else monitoringDisabled" (click)="changeStatus(data)"><span class="btn btn-rounded btn-success">Activado</span> </td>
+                                <ng-template #monitoringDisabled><td (click)="changeStatus(data)"> <span class="btn btn-rounded btn-danger">Desactivado</span></td> </ng-template>
+                                <td>
+                                    <a (click)="openModalEdit(editWeightCheckModal, data, i)" class="link mr-2"
+                                      placement="top" ngbTooltip="Edit">
+                                      <i class="ti-pencil text-info m-r-10 cursor" ></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="d-flex justify-content-center mt-2">    
+                    <ngb-pagination [(page)]="numberPages"
+                    [pageSize]="numberDataShow"
+                    [collectionSize]="weightCheckArray.length"
+                    [maxSize]="5"></ngb-pagination>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--- Modal edit WeightCheck -->
+<ng-template #editWeightCheckModal let-modal>
+  
+    <div class="modal-header">
+  
+      <h5 class="modal-title" id="editLabel">Editar Control de peso</h5>
+  
+      <button type="button" class="close" (click)="closeModal()" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+  
+    </div>
+  
+    <div class="modal-body">
+  
+      <form [formGroup]="formEditWeightCheck" (ngSubmit)="updateDataWeightCheck()">
+  
+        <div class="form-group row">
+            <label for="motorShip" class="col-sm-4 col-form-label">Motonave</label>
+            <div class="col-sm-8">
+                <select class="form-control" formControlName="motorShip" id="motorShip">
+                    <option *ngFor="let item of boatArray" [value]="item._id">{{item.description}}</option>
+                </select>
+                <div class="text-danger mt-2" *ngIf="invalidField('motorShip')">
+                    <p>{{ getErrorMessageEdit("motorShip") }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="place" class="col-sm-4 col-form-label">Lugar</label>
+            <div class="col-sm-8">
+                <select class="form-control" formControlName="place" id="place">
+                    <option *ngFor="let item of siteArray" [value]="item._id">{{item.description}}</option>
+                </select>
+                <div class="text-danger mt-2" *ngIf="invalidField('place')">
+                    <p>{{ getErrorMessageEdit("place") }}</p>
+                </div>
+            </div>
+        </div> 
+
+        <div class="form-group row">
+            <label for="create_by" class="col-sm-4 col-form-label">Creado por</label>
+            <div class="col-sm-8">
+                <select class="form-control" formControlName="create_by" id="create_by">
+                    <option *ngFor="let item of userArray" [value]="item._id">{{item.email}}</option>
+                </select>
+                <div class="text-danger mt-2" *ngIf="invalidField('create_by')">
+                    <p>{{ getErrorMessageEdit("create_by") }}</p>
+                </div>
+            </div>
+        </div> 
+
+        <div class="form-group row">
+            <label for="weight_check_specie" class="col-sm-4 col-form-label">Especies</label>
+            <div class="col-sm-8 select-icon">
+                <select class="form-control" (change)="onChange($event)" id="weight_check_specie">
+                    <option *ngFor="let data of weightCheckArray[posMeasurement].weight_check_specie; let i=index" value="{{i}}">{{data.specie}}</option>
+                </select>
+                <div class="text-danger mt-2" *ngIf="invalidField('weight_check_specie')">
+                    <p>{{ getErrorMessageEdit("weight_check_specie") }}</p>
+                </div>
+                <a (click)="openModalEditSpecie(editModalEspecies, posSpecie)" class="link mr-2 ml-2" [ngClass]="{'disable': posSpecie === undefined}" placement="top" ngbTooltip="Edit">
+                    <i class="ti-pencil m-r-10 cursor" [ngClass]="{'disable': posSpecie === undefined, 'text-info': posSpecie !== undefined}" ></i>
+                </a>
+            </div>
+        </div> 
+        
+        <div class="form-group row">
+            <label for="products_below_size" class="col-sm-4 col-form-label">Productos debajo de talla</label>
+            <div class="col-sm-8">
+                <select class="form-control" formControlName="products_below_size" id="products_below_size">
+                    <option value="true">Si</option>
+                    <option value="false">No</option>
+                </select>
+                <div class="text-danger mt-2" *ngIf="invalidField('products_below_size')">
+                    <p>{{ getErrorMessageEdit("products_below_size") }}</p>
+                </div>
+            </div>
+        </div>  
+        <div class="form-group row">
+            <label for="number_of_ovate_females" class="col-sm-4 col-form-label"># Hembras ovadas</label>
+            <div class="col-sm-8">
+                <input type="number" class="form-control"  formControlName="number_of_ovate_females" id="number_of_ovate_females">
+                <div class="text-danger mt-2" *ngIf="invalidField('number_of_ovate_females')">
+                    <p>{{ getErrorMessageEdit("number_of_ovate_females") }}</p>
+                </div>
+            </div>
+        </div>  
+        <div class="form-group row">
+            <label for="number_of_tails_below_size" class="col-sm-4 col-form-label">Colas por debajo de talla</label>
+            <div class="col-sm-8">
+                <input type="number" class="form-control"  formControlName="number_of_tails_below_size" id="number_of_tails_below_size">
+                <div class="text-danger mt-2" *ngIf="invalidField('number_of_tails_below_size')">
+                    <p>{{ getErrorMessageEdit("number_of_tails_below_size") }}</p>
+                </div>
+            </div>
+        </div>  
+        <div class="form-group row">
+            <label for="total_weight" class="col-sm-4 col-form-label">Peso Total</label>
+            <div class="col-sm-8">
+                <input type="number" class="form-control"  formControlName="total_weight" id="total_weight">
+                <div class="text-danger mt-2" *ngIf="invalidField('total_weight')">
+                    <p>{{ getErrorMessageEdit("total_weight") }}</p>
+                </div>
+            </div>
+        </div>  
+
+        <div class="form-group row">
+            <label for="names_people_sampling" class="col-sm-4 col-form-label">Personas</label>
+            <div class="col-sm-8 select-icon">
+                <select class="form-control" (change)="onChangePeople($event)" id="names_people_sampling">
+                    <option *ngFor="let data of weightCheckArray[posMeasurement].names_people_sampling; let i=index" value="{{i}}">{{data.name}}</option>
+                </select>
+                <div class="text-danger mt-2" *ngIf="invalidField('names_people_sampling')">
+                    <p>{{ getErrorMessageEdit("names_people_sampling") }}</p>
+                </div>
+                <a (click)="openModalEditPeople(editModalPeople, posPeople)" class="link mr-2 ml-2" [ngClass]="{'disable': posPeople === undefined}" placement="top" ngbTooltip="Edit">
+                    <i class="ti-pencil m-r-10 cursor" [ngClass]="{'disable': posPeople === undefined, 'text-info': posPeople !== undefined}" ></i>
+                </a>
+            </div>
+        </div> 
+
+        <div class="form-group row">
+            <label for="issue_date" class="col-sm-4 col-form-label">Fecha de Registro</label>
+            <div class="col-sm-8">
+                <input type="date" value="issue_date" class="form-control" formControlName="issue_date" id="issue_date">
+                <div class="text-danger mt-2" *ngIf="invalidField('issue_date')">
+                    <p>{{ getErrorMessageEdit("issue_date") }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancelar</button>
+  
+          <button type="submit" class="btn btn-primary">Editar</button>
+        </div>
+      </form>
+    </div>
+  </ng-template>
+
+  <!--- Modal edit Specie -->
+<ng-template #editModalEspecies let-modal>
+  
+    <div class="modal-header">
+  
+      <h5 class="modal-title" id="editLabel">Editar Especie</h5>
+  
+      <button type="button" class="close" (click)="closeModalS()" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+  
+    </div>
+  
+    <div class="modal-body">
+  
+      <form [formGroup]="formEditSpecie" (ngSubmit)="saveChangeSpecie(formEditSpecie.value)">
+  
+
+        <div class="form-group row">
+            <label for="specie" class="col-sm-4 col-form-label">Especie</label>
+            <div class="col-sm-8">
+                <select class="form-control" formControlName="specie" id="specie">
+                    <option *ngFor="let item of specieArray" [value]="item.common_name">{{item.common_name}}</option>
+                </select>
+                <div class="text-danger mt-2" *ngIf="invalidFieldSpecie('specie')">
+                    <p>{{ getErrorMessageEditSpecie("specie") }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="state" class="col-sm-4 col-form-label">Estado</label>
+            <div class="col-sm-8">
+                <select class="form-control" formControlName="state" id="state">
+                    <option *ngFor="let item of statusArray; let i = index" [value]="i">{{item}}</option>
+                </select>
+                <div class="text-danger mt-2" *ngIf="invalidFieldSpecie('state')">
+                    <p>{{ getErrorMessageEdit("state") }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="weight" class="col-sm-4 col-form-label">Peso</label>
+            <div class="col-sm-8">
+                <input type="number" class="form-control"  formControlName="weight" id="weight">
+                <div class="text-danger mt-2" *ngIf="invalidFieldSpecie('weight')">
+                    <p>{{ getErrorMessageEditSpecie("weight") }}</p>
+                </div>
+            </div>
+        </div>  
+
+        <div class="form-group row">
+            <label for="size" class="col-sm-4 col-form-label">Talla (cm)</label>
+            <div class="col-sm-8">
+                <input type="number" class="form-control"  formControlName="size" id="size">
+                <div class="text-danger mt-2" *ngIf="invalidFieldSpecie('size')">
+                    <p>{{ getErrorMessageEditSpecie("size") }}</p>
+                </div>
+            </div>
+        </div> 
+        <div class="form-group row">
+            <label for="sex" class="col-sm-4 col-form-label">Sexo</label>
+            <div class="col-sm-8">
+                <select class="form-control" formControlName="sex" id="sex">
+                    <option value="Macho">Macho</option>
+                    <option value="Hembra">Hembra</option>
+                </select>
+                <div class="text-danger mt-2" *ngIf="invalidFieldSpecie('sex')">
+                    <p>{{ getErrorMessageEditSpecie("sex") }}</p>
+                </div>
+            </div>
+        </div> 
+        <div class="form-group row">
+            <label for="ovate" class="col-sm-4 col-form-label">Ovada</label>
+            <div class="col-sm-8">
+                <select class="form-control" formControlName="ovate" id="ovate">
+                    <option value="true">Si</option>
+                    <option value="false">No</option>
+                </select>
+                <div class="text-danger mt-2" *ngIf="invalidFieldSpecie('ovate')">
+                    <p>{{ getErrorMessageEditSpecie("ovate") }}</p>
+                </div>
+            </div>
+        </div> 
+        <div class="form-group row">
+            <label for="observations" class="col-sm-4 col-form-label">Observaciones</label>
+            <div class="col-sm-8">
+                <textarea class="form-control textarea" rows="5"  formControlName="observations" id="observations"></textarea>
+                <div class="text-danger mt-2" *ngIf="invalidFieldSpecie('observations')">
+                    <p>{{ getErrorMessageEditSpecie("observations") }}</p>
+                </div>
+            </div>
+        </div> 
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeModalS()">Cancelar</button>
+  
+          <button type="submit" class="btn btn-primary">Editar</button>
+        </div>
+      </form>
+    </div>
+  </ng-template>
+
+<!--- Modal edit People -->
+<ng-template #editModalPeople let-modal>
+  
+    <div class="modal-header">
+
+        <h5 class="modal-title" id="editLabel">Editar Personas</h5>
+    
+        <button type="button" class="close" (click)="closeModalS()" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+        </button>
+    
+    </div>
+    
+    <div class="modal-body">
+        <form [formGroup]="formEditPeople" (ngSubmit)="saveChangePeople()">
+            <div class="form-group row">
+                <label for="name" class="col-sm-4 col-form-label">Nombre</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control"  formControlName="name" id="name">
+                    <div class="text-danger mt-2" *ngIf="invalidFieldPeople('name')">
+                        <p>{{ getErrorMessageEditPeople("name") }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="closeModalS()">Cancelar</button>
+    
+                <button type="submit" class="btn btn-primary">Editar</button>
+            </div> 
+        </form>
+    </div>
+</ng-template>

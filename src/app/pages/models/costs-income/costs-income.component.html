@@ -1,0 +1,302 @@
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title mb-0">Tabla de Costos e Ingresos</h4>
+                <div class="d-md-flex mt-3">
+                    <input type="text" name="search" placeholder="Buscar costos e Ingresos" class="form-control w-auto" (input)="filterCostsIncome($event)" />
+                    <button *ngIf="id_view === 0" type="button" class="btn btn-danger ml-1" (click)='giveDataOff(false)'>
+                        <i class="fas fa-minus-circle" name="Inhabilitados"></i> 
+                    </button>
+                    <button *ngIf="id_view !== 0" type="button" class="btn btn-success ml-1" (click)='giveDataOff(true)'>
+                        <i class="fas fa-check-circle" name="Habilitados"></i> 
+                    </button>   
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-striped no-wrap border mt-4">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Data genérica</th>
+                                <th>Gastos de producción</th>
+                                <th>Ventas e ingresos por producción</th>
+                                <th>Fecha de Creación</th>
+                                <th>Fecha de Actualización</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let data of costsIncomeArray | slice: (numberPages-1) * numberDataShow : (numberPages-1) * numberDataShow + numberDataShow; let i = index">
+                                <td class="justify-content-center">{{getPositionCostsIncome(data._id)}}</td>
+                                <td class="justify-content-center">
+                                    Editar
+                                    <a (click)="openModalEdit(editCostsIncomeModalOne, data, i)" class="link mr-2"
+                                      placement="top" ngbTooltip="Edit">
+                                      <i class="ti-pencil text-info m-r-10 cursor" ></i>
+                                    </a>
+                                </td>
+                                <td class="justify-content-center">
+                                    Editar
+                                    <a (click)="openModalEdit(editCostsIncomeModalTwo, data, i)" class="link mr-2"
+                                      placement="top" ngbTooltip="Edit">
+                                      <i class="ti-pencil text-info m-r-10 cursor" ></i>
+                                    </a>
+                                </td>
+                                <td class="justify-content-center">
+                                    Editar
+                                    <a (click)="openModalEdit(editCostsIncomeModalThree, data, i)" class="link mr-2"
+                                      placement="top" ngbTooltip="Edit">
+                                      <i class="ti-pencil text-info m-r-10 cursor" ></i>
+                                    </a>
+                                </td>
+                                <td class="justify-content-center">{{data.createdAt | date:"dd/MM/YY - hh:mm"}}</td>
+                                <td class="justify-content-center">{{data.updatedAt | date:"dd/MM/YY - hh:mm"}}</td>
+                                <td *ngIf="data.is_active; else costsIncomeDisabled" (click)="changeStatus(data)"><span class="btn btn-rounded btn-success">Activado</span> </td>
+                                <ng-template #costsIncomeDisabled><td (click)="changeStatus(data)"> <span class="btn btn-rounded btn-danger">Desactivado</span></td> </ng-template>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="d-flex justify-content-center mt-2">    
+                    <ngb-pagination [(page)]="numberPages"
+                    [pageSize]="numberDataShow"
+                    [collectionSize]="costsIncomeArray.length"
+                    [maxSize]="5"></ngb-pagination>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--- Modal edit CostsIncome 1 -->
+<ng-template #editCostsIncomeModalOne let-modal>
+  
+    <div class="modal-header">
+  
+      <h5 class="modal-title" id="editLabel">Editar datos génericos</h5>
+  
+      <button type="button" class="close" (click)="closeModal()" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+  
+    </div>
+  
+    <div class="modal-body">
+  
+      <form [formGroup]="formEditCostsIncome" (ngSubmit)="updateDataCostsIncome()">
+  
+        <div class="form-group row">
+            <label for="registry_number" class="col-sm-4 col-form-label">Número de registro</label>
+            <div class="col-sm-8">
+                <input type="text" class="form-control"  formControlName="registry_number" id="registry_number" [attr.disabled]="true">
+                <div class="text-danger mt-2" *ngIf="invalidField('registry_number')">
+                    <p>{{ getErrorMessageEdit("registry_number") }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="business_name_establishment" class="col-sm-4 col-form-label">Nombre del predio</label>
+            <div class="col-sm-8">
+                <input type="text" class="form-control"  formControlName="business_name_establishment" id="business_name_establishment">
+                <div class="text-danger mt-2" *ngIf="invalidField('business_name_establishment')">
+                    <p>{{ getErrorMessageEdit("business_name_establishment") }}</p>
+                </div>
+            </div>
+        </div>
+        <!-- SELECT -->
+        <div class="form-group row">
+            <label for="person_type" class="col-sm-4 col-form-label">Tipo de persona</label>
+            <div class="col-sm-8">
+                <select class="form-control" formControlName="person_type" id="person_type">
+                    <option value="natural">Persona natural</option>
+                    <option value="juridica">Persona jurídica</option>
+                </select>
+                <div class="text-danger mt-2" *ngIf="invalidField('person_type')">
+                    <p>{{ getErrorMessageEdit("person_type") }}</p>
+                </div>
+            </div>
+        </div> 
+        <!-- SELECT -->
+        <div class="form-group row">
+            <label for="gender" class="col-sm-4 col-form-label">Género</label>
+            <div class="col-sm-8">
+                <select class="form-control" formControlName="gender" id="gender">
+                    <option value="M">M</option>
+                    <option value="F">F</option>
+                </select>
+                <div class="text-danger mt-2" *ngIf="invalidField('gender')">
+                    <p>{{ getErrorMessageEdit("gender") }}</p>
+                </div>
+            </div>
+        </div> 
+        <div class="form-group row">
+            <label for="create_by" class="col-sm-4 col-form-label">Creado por</label>
+            <div class="col-sm-8">
+                <select class="form-control" formControlName="create_by" id="create_by">
+                    <option *ngFor="let item of userArray" [value]="item._id">{{item.name}}</option>
+                </select>
+                <div class="text-danger mt-2" *ngIf="invalidField('create_by')">
+                    <p>{{ getErrorMessageEdit("create_by") }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="nit" class="col-sm-4 col-form-label">NIT</label>
+            <div class="col-sm-8">
+                <input type="text" class="form-control"  formControlName="nit" id="nit">
+                <div class="text-danger mt-2" *ngIf="invalidField('nit')">
+                    <p>{{ getErrorMessageEdit("nit") }}</p>
+                </div>
+            </div>
+        </div> 
+        <!-- SELECT -->
+        <div class="form-group row">
+            <label for="localization" class="col-sm-4 col-form-label">Localización</label>
+            <div class="col-sm-8">
+                <select class="form-control" formControlName="localization" id="localization">
+                    <option value="1">San Andrés</option>
+                    <option value="2">Providencia</option>
+                    <option value="3">Santa Catalina</option>
+                </select>
+                <div class="text-danger mt-2" *ngIf="invalidField('localization')">
+                    <p>{{ getErrorMessageEdit("localization") }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="identification" class="col-sm-4 col-form-label">Identificación</label>
+            <div class="col-sm-8">
+                <input type="text" class="form-control"  formControlName="identification" id="identification">
+                <div class="text-danger mt-2" *ngIf="invalidField('identification')">
+                    <p>{{ getErrorMessageEdit("identification") }}</p>
+                </div>
+            </div>
+        </div> 
+        <div class="form-group row">
+            <label for="informant_name" class="col-sm-4 col-form-label">Nombre Propietario</label>
+            <div class="col-sm-8">
+                <input type="text" class="form-control"  formControlName="informant_name" id="informant_name">
+                <div class="text-danger mt-2" *ngIf="invalidField('informant_name')">
+                    <p>{{ getErrorMessageEdit("informant_name") }}</p>
+                </div>
+            </div>
+        </div> 
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancelar</button>
+  
+          <button type="submit" class="btn btn-primary">Editar</button>
+        </div>
+      </form>
+    </div>
+</ng-template>
+
+<!--- Modal edit CostsIncome 2 -->
+<ng-template #editCostsIncomeModalTwo let-modal>
+  
+    <div class="modal-header">
+  
+      <h5 class="modal-title" id="editLabel">Editar gastos de producción</h5>
+  
+      <button type="button" class="close" (click)="closeModal()" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+  
+    </div>
+  
+    <div class="modal-body">
+  
+      <form [formGroup]="formEditCostsIncome" (ngSubmit)="updateDataCostsIncome()">
+        
+        <div class="form-group row">
+            <label for="production_expenses" class="col-sm-4 col-form-label">Gastos por: </label>
+            <div class="col-sm-8 select-icon">
+                <select class="form-control" (change)="onChange($event)" id="production_expenses">
+                    <option *ngFor="let data of costsIncomeArray[posCostsIncome].production_expenses; let i=index" [value]="i">
+                        {{data.description}}
+                    </option>
+                </select>
+                <div class="text-danger mt-2" *ngIf="invalidField('production_expenses')">
+                    <p>{{ getErrorMessageEdit("production_expenses") }}</p>
+                </div>
+                <a (click)="openModalEditIncome(posIncome)" class="link mr-2 ml-2" [ngClass]="{'disable': posIncome === undefined}" placement="top" ngbTooltip="Edit">
+                    <i class="ti-pencil text-info m-r-10 cursor" [ngClass]="{'disable': posIncome === undefined, 'text-info': posIncome !== undefined}"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancelar</button>
+  
+          <button type="submit" class="btn btn-primary">Editar</button>
+        </div>
+      </form>
+    </div>
+</ng-template>
+
+<!--- Modal edit CostsIncome 3 -->
+<ng-template #editCostsIncomeModalThree let-modal>
+  
+    <div class="modal-header">
+  
+      <h5 class="modal-title" id="editLabel">Editar ventas e ingresos por producción</h5>
+  
+      <button type="button" class="close" (click)="closeModal()" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+  
+    </div>
+  
+    <div class="modal-body">
+  
+      <form [formGroup]="formEditCostsIncome" (ngSubmit)="updateDataCostsIncome()">
+  
+        <div class="form-group row">
+            <label for="cultivation_sales" class="col-sm-4 col-form-label">Cultivos</label>
+            <div class="col-sm-8 select-icon">
+                <select class="form-control" (change)="onChange($event)" id="cultivation_sales">
+                    <option *ngFor="let data of costsIncomeArray[posCostsIncome].cultivation_sales; let i=index" [value]="i">
+                        {{data.description}}
+                    </option>
+                </select>
+                <div class="text-danger mt-2" *ngIf="invalidField('cultivation_sales')">
+                    <p>{{ getErrorMessageEdit("cultivation_sales") }}</p>
+                </div>
+                <a (click)="openModalEditCultivation(posIncome)" class="link mr-2 ml-2" [ngClass]="{'disable': posIncome === undefined}" placement="top" ngbTooltip="Edit">
+                    <i class="ti-pencil m-r-10 cursor" [ngClass]="{'disable': posIncome === undefined, 'text-info': posIncome !== undefined}" ></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="total_product_sales" class="col-sm-4 col-form-label">Total ventas de productos de ganadería, avicultura, otros: </label>
+            <div class="col-sm-8 select-icon">
+                <select class="form-control" (change)="onChange($event)" id="total_product_sales">
+                    <option *ngFor="let data of costsIncomeArray[posCostsIncome].total_product_sales; let i=index" [value]="i">
+                        {{data.description}}
+                    </option>
+                </select>
+                <div class="text-danger mt-2" *ngIf="invalidField('total_product_sales')">
+                    <p>{{ getErrorMessageEdit("total_product_sales") }}</p>
+                </div>
+                <a (click)="openModalEditProductSales(posIncome)" class="link mr-2 ml-2" [ngClass]="{'disable': posIncome === undefined}" placement="top" ngbTooltip="Edit">
+                    <i class="ti-pencil m-r-10 cursor" [ngClass]="{'disable': posIncome === undefined, 'text-info': posIncome !== undefined}" ></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="form-group center">
+            <label for="income_different_products" class="col-sm-10 col-form-label">Ingresos distintos de la venta de producto </label>
+            <a (click)="openModalEditIncomeDifferent(posIncome)" class="link" [ngClass]="{'disable': posIncome === undefined}" placement="top" ngbTooltip="Edit">
+                <i class="ti-pencil m-r-10 cursor" [ngClass]="{'disable': posIncome === undefined, 'text-info': posIncome !== undefined}" ></i>
+            </a> 
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancelar</button>
+  
+          <button type="submit" class="btn btn-primary">Editar</button>
+        </div>
+      </form>
+    </div>
+</ng-template>

@@ -1,0 +1,41 @@
+<div class="modal-header">
+
+    <h5 class="modal-title" id="editLabel">Editar producto agricola</h5>
+
+    <button type="button" class="close" (click)="closeModal()" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+    </button>
+
+</div>
+
+<div class="modal-body">
+    <form [formGroup]="formCrops" (ngSubmit)="validateCropsForm()">
+        <div class="form-group row">
+            <label for="product" class="col-sm-4 col-form-label">Producto</label>
+            <div class="col-sm-8 select-icon">
+                <select class="form-control" id="product" formControlName="name">
+                    <option *ngFor="let prod of productsToShow"
+                    [selected]="product.name === prod">{{prod}}</option>
+                </select>
+                <div class="text-danger mt-2" *ngIf="invalidFieldCrops('name')">
+                    <p>{{ getErrorMessageEditCrops("name") }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="price" class="col-sm-4 col-form-label">Precios(Kg)</label>
+            <div class="col-sm-8">
+                <input type="text" formControlName="price" class="form-control" id="price" (keypress)="keyboardDisabledKeys($event.charCode)">
+                <div class="text-danger mt-2" *ngIf="invalidFieldCrops('price')">
+                    <p>{{ getErrorMessageEditCrops("price") }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancelar</button>
+    
+            <button type="submit" class="btn btn-primary">Editar</button>
+        </div>
+    </form>
+</div>

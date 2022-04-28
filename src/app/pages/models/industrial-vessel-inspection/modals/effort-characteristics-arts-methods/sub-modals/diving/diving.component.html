@@ -1,0 +1,48 @@
+<!-- Modal edit general information -->
+<div class="modal-header">
+  
+    <h5 class="modal-title" id="editLabel">Editar información de buceo</h5>
+
+    <button type="button" class="close" (click)="closeModal()" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+
+  </div>
+
+  <div class="modal-body">
+    <form [formGroup]="formEditDiving" (ngSubmit)="saveChangeDiving()">
+        <div class="form-group row">
+            <label for="diving_number_pangas_perday" class="col-sm-4 col-form-label">Número Pangas/día</label>
+            <div class="col-sm-8">
+                <input type="text" class="form-control"  formControlName="diving_number_pangas_perday" id="diving_number_pangas_perday" (keypress)="keyboardDisabled($event.charCode)">
+                <div class="text-danger mt-2" *ngIf="invalidFieldDiving('diving_number_pangas_perday')">
+                    <p>{{ getErrorMessageEditDiving("diving_number_pangas_perday") }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="diving_number_divers_perpanga" class="col-sm-4 col-form-label">Número Buzos/Panga</label>
+            <div class="col-sm-8">
+                <input type="text" class="form-control"  formControlName="diving_number_divers_perpanga" id="diving_number_divers_perpanga" (keypress)="keyboardDisabled($event.charCode)">
+                <div class="text-danger mt-2" *ngIf="invalidFieldDiving('diving_number_divers_perpanga')">
+                    <p>{{ getErrorMessageEditDiving("diving_number_divers_perpanga") }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="diving_effort_diver_perday" class="col-sm-4 col-form-label">Esfuerzo (Buzo/día)</label>
+            <div class="col-sm-8">
+                <input type="text" class="form-control"  formControlName="diving_effort_diver_perday" id="diving_effort_diver_perday" (keypress)="keyboardDisabled($event.charCode)">
+                <div class="text-danger mt-2" *ngIf="invalidFieldDiving('diving_effort_diver_perday')">
+                    <p>{{ getErrorMessageEditDiving("diving_effort_diver_perday") }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancelar</button>
+
+            <button type="submit" class="btn btn-primary">Editar</button>
+        </div>
+    </form>
+</div>

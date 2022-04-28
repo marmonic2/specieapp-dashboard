@@ -1,0 +1,170 @@
+<!-- Modal edit transshipment control -->
+<div class="modal-header">
+  
+    <h5 class="modal-title" id="editLabel">Trasbordo</h5>
+
+    <button type="button" class="close" (click)="closeModal()" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+
+  </div>
+
+  <div class="modal-body">
+
+    <form [formGroup]="formEditTransshipmentControl" (ngSubmit)="saveChangeTransshipmentControl()">
+      
+      <div class="form-group row">
+          <label for="transshipment_control" class="col-sm-4 col-form-label">Trae Trasbordo</label>
+          <div class="col-sm-8 select-icon">
+              <select class="form-control" (change)="onChange($event)" id="transshipment_control">
+                  <option *ngFor="let data of dataForm.value.transshipment_control; let i=index" [value]="i">
+                      {{data.product}}
+                  </option>
+              </select>
+              <div class="text-danger mt-2" *ngIf="invalidFieldTransshipmentControl('transshipment_control')">
+                  <p>{{ getErrorMessageEditTransshipmentControl("transshipment_control") }}</p>
+              </div>
+              <a (click)="openModalBringsTransshipment(editBringModal, posIncome)" class="link mr-2 ml-2" [ngClass]="{'disable': posIncome === undefined}" placement="top" ngbTooltip="Edit">
+                  <i class="ti-pencil text-info m-r-10 cursor" [ngClass]="{'disable': posIncome === undefined, 'text-info': posIncome !== undefined}"></i>
+              </a>
+          </div>
+      </div>
+
+      <div class="form-group row">
+          <label for="transshipment_product_control" class="col-sm-4 col-form-label">Trasbordo producto</label>
+          <div class="col-sm-8 select-icon">
+              <select class="form-control" (change)="onChange($event)" id="transshipment_product_control">
+                  <option *ngFor="let data of dataForm.value.transshipment_product_control; let i=index" [value]="i">
+                      {{data.product}}
+                  </option>
+              </select>
+              <div class="text-danger mt-2" *ngIf="invalidFieldTransshipmentControl('transshipment_product_control')">
+                  <p>{{ getErrorMessageEditTransshipmentControl("transshipment_product_control") }}</p>
+              </div>
+              <a (click)="openModalProductTransshipment(editProductModal, posIncome)" class="link mr-2 ml-2" [ngClass]="{'disable': posIncome === undefined}" placement="top" ngbTooltip="Edit">
+                  <i class="ti-pencil text-info m-r-10 cursor" [ngClass]="{'disable': posIncome === undefined, 'text-info': posIncome !== undefined}"></i>
+              </a>
+          </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancelar</button>
+
+        <button type="submit" class="btn btn-primary">Editar</button>
+      </div>
+    </form>
+</div>
+
+<!--- Modal edit Bring -->
+<ng-template #editBringModal let-modal>
+  
+    <div class="modal-header">
+  
+      <h5 class="modal-title" id="editLabel">Bring</h5>
+  
+      <button type="button" class="close" (click)="closeModalS()" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+  
+    </div>
+  
+    <div class="modal-body">
+      <form [formGroup]="formEditBring" (ngSubmit)="saveChangeBring()">
+          <!-- NG FOR BOAT -->
+          <div class="form-group row">
+              <label for="boat" class="col-sm-4 col-form-label">Embarcación</label>
+              <div class="col-sm-8">
+                  <select class="form-control" formControlName="boat" id="boat">
+                      <option *ngFor="let item of boatArray" [value]="item.description">{{item.description}}</option>
+                  </select>
+                  <div class="text-danger mt-2" *ngIf="invalidFieldBring('boat')">
+                      <p>{{ getErrorMessageEditBring("boat") }}</p>
+                  </div>
+              </div>
+          </div>
+          <!-- NG FOR FISH -->
+          <div class="form-group row">
+              <label for="product" class="col-sm-4 col-form-label">Producto</label>
+              <div class="col-sm-8">
+                  <select class="form-control" formControlName="product" id="product">
+                      <option *ngFor="let item of specieArray" [value]="item.common_name">{{item.common_name}}</option>
+                  </select>
+                  <div class="text-danger mt-2" *ngIf="invalidFieldBring('product')">
+                      <p>{{ getErrorMessageEditBring("product") }}</p>
+                  </div>
+              </div>
+          </div>
+          <div class="form-group row">
+              <label for="weight_kg" class="col-sm-4 col-form-label">Peso (Kg)</label>
+              <div class="col-sm-8">
+                  <input type="number" class="form-control"  formControlName="weight_kg" id="weight_kg">
+                  <div class="text-danger mt-2" *ngIf="invalidFieldBring('weight_kg')">
+                      <p>{{ getErrorMessageEditBring("weight_kg") }}</p>
+                  </div>
+              </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="closeModalS()">Cancelar</button>
+    
+            <button type="submit" class="btn btn-primary">Editar</button>
+          </div>
+     </form>
+  </div>
+</ng-template>
+
+<!--- Modal edit Product -->
+<ng-template #editProductModal let-modal>
+
+    <div class="modal-header">
+  
+      <h5 class="modal-title" id="editLabel">Subgrupo</h5>
+  
+      <button type="button" class="close" (click)="closeModalS()" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+  
+    </div>
+  
+    <div class="modal-body">
+        <form [formGroup]="formEditProduct" (ngSubmit)="saveChangeProduct()">
+            <!-- NG FOR BOAT -->
+            <div class="form-group row">
+                <label for="boat" class="col-sm-4 col-form-label">Embarcación</label>
+                <div class="col-sm-8">
+                    <select class="form-control" formControlName="boat" id="boat">
+                        <option *ngFor="let item of boatArray" [value]="item.description">{{item.description}}</option>
+                    </select>
+                    <div class="text-danger mt-2" *ngIf="invalidFieldProduct('boat')">
+                        <p>{{ getErrorMessageEditProduct("boat") }}</p>
+                    </div>
+                </div>
+            </div>
+            <!-- NG FOR FISH -->
+            <div class="form-group row">
+                <label for="product" class="col-sm-4 col-form-label">Producto</label>
+                <div class="col-sm-8">
+                    <select class="form-control" formControlName="product" id="product">
+                        <option *ngFor="let item of specieArray" [value]="item.common_name">{{item.common_name}}</option>
+                    </select>
+                    <div class="text-danger mt-2" *ngIf="invalidFieldProduct('product')">
+                        <p>{{ getErrorMessageEditProduct("product") }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="weight_kg" class="col-sm-4 col-form-label">Peso (Kg)</label>
+                <div class="col-sm-8">
+                    <input type="number" class="form-control"  formControlName="weight_kg" id="weight_kg">
+                    <div class="text-danger mt-2" *ngIf="invalidFieldProduct('weight_kg')">
+                        <p>{{ getErrorMessageEditProduct("weight_kg") }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" (click)="closeModalS()">Cancelar</button>
+      
+              <button type="submit" class="btn btn-primary">Editar</button>
+            </div>
+       </form>
+    </div>
+</ng-template>

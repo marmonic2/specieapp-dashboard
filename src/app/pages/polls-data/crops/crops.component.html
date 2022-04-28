@@ -1,0 +1,125 @@
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title mb-0">Tabla de Cultivos </h4>
+                <div class="d-md-flex mt-3">
+                    <input type="text" name="search" placeholder="Buscar cultivo" class="form-control w-auto" (input)="filterCrop($event)" />
+                    <button type="button"  class="btn btn-primary ml-auto" (click)="openModal(modalAddCrop)"><i class="fas fa-plus"></i> Agregar Cultivo</button>
+                    <button *ngIf="id_view === 0" type="button" class="btn btn-danger ml-1" (click)='giveDataOff(false)'>
+                        <i class="fas fa-minus-circle" name="Inhabilitados"></i> 
+                    </button>
+                    <button *ngIf="id_view !== 0" type="button" class="btn btn-success ml-1" (click)='giveDataOff(true)'>
+                        <i class="fas fa-check-circle" name="Habilitados"></i> 
+                    </button>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-striped no-wrap border mt-4">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Descripción</th>
+                                <th>Fecha de Creación</th>
+                                <th>Fecha de Actualización</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let data of cropArray | slice: (numberPages-1) * numberCropShow : (numberPages-1) * numberCropShow + numberCropShow">
+                                <td class="justify-content-center">{{getPositionCrop(data._id)}}</td>
+                                <td class="justify-content-center">{{data.description}}</td>
+                                <td class="justify-content-center">{{data.createdAt | date:"dd/MM/YY - hh:mm"}}</td>
+                                <td class="justify-content-center">{{data.updatedAt | date:"dd/MM/YY - hh:mm"}}</td>
+                                <td *ngIf="data.is_active; else cropDisabled" (click)="changeStatus(data)"><span class="btn btn-rounded btn-success">Activado</span> </td>
+                                <ng-template #cropDisabled><td (click)="changeStatus(data)"> <span class="btn btn-rounded btn-danger">Desactivado</span></td> </ng-template>
+                                <td>
+                                    <a (click)="openModalEdit(editCropModal, data)" class="link mr-2"
+                                      placement="top" ngbTooltip="Edit">
+                                      <i class="ti-pencil text-info m-r-10 cursor" ></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="d-flex justify-content-center mt-2">    
+                    <ngb-pagination [(page)]="numberPages"
+                    [pageSize]="numberCropShow"
+                    [collectionSize]="cropArray.length"
+                    [maxSize]="5"></ngb-pagination>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--- Modal add crop -->
+
+<ng-template #modalAddCrop let-modal>
+
+    <div class="modal-header">
+        <h5 class="modal-title" id="addLabel">Agregar Cultivo</h5>
+        <button type="button" class="close" (click)="closeModal()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
+    <div class="modal-body">
+        <form [formGroup]="formCrop" (ngSubmit)="saveDataCrop()">
+
+            <div class="form-group row">
+                <label for="description" class="col-sm-4 col-form-label">Descripción</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" formControlName="description" id="description">
+                    <div class="text-danger mt-2" *ngIf="invalidField('description')">
+                        <p>{{ getErrorMessage("description") }}</p>
+                    </div>
+                </div>
+            </div> 
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-dark" (click)="closeModal()">Cerrar</button>
+                <button type="submit" class="btn btn-primary">Agregar</button>
+            </div>
+        </form>
+    </div>
+
+</ng-template>
+
+
+<!--- Modal edit crop -->
+<ng-template #editCropModal let-modal>
+  
+    <div class="modal-header">
+  
+      <h5 class="modal-title" id="editLabel">Editar Cultivo</h5>
+  
+      <button type="button" class="close" (click)="closeModal()" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+  
+    </div>
+  
+    <div class="modal-body">
+  
+      <form [formGroup]="formEditCrop" (ngSubmit)="updateDataCrop()">
+  
+        <div class="form-group row">
+            <label for="description" class="col-sm-4 col-form-label">Descripción</label>
+            <div class="col-sm-8">
+                <input type="text" class="form-control" formControlName="description" id="description">
+                <div class="text-danger mt-2" *ngIf="invalidFieldE('description')">
+                    <p>{{ getErrorMessageEdit("description") }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancelar</button>
+  
+          <button type="submit" class="btn btn-primary">Editar</button>
+        </div>
+      </form>
+    </div>
+  </ng-template>

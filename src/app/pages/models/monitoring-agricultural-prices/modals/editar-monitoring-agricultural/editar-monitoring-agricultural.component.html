@@ -1,0 +1,198 @@
+<div class="modal-header">
+
+    <h5 class="modal-title" id="editLabel">Editar seguimiento de precios agrícolas</h5>
+
+    <button type="button" class="close" (click)="closeModal()" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+    </button>
+
+</div>
+
+<div class="modal-body">
+    <form [formGroup]="formMonitoring" (ngSubmit)="validateMonitoringForm()">
+        <div class="form-group row">
+            <label for="registry_number" class="col-sm-4 col-form-label">Número de registro</label>
+            <div class="col-sm-8">
+                <input type="text" formControlName="registry_number" class="form-control" id="registry_number" [attr.disabled]="true">
+                <div class="text-danger mt-2" *ngIf="invalidFieldMonitoring('registry_number')">
+                    <p>{{ getErrorMessageEditIncome("registry_number") }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="business_name_establishment" class="col-sm-4 col-form-label">Razón social del establecimiento</label>
+            <div class="col-sm-8">
+                <input type="text" formControlName="business_name_establishment" class="form-control" id="business_name_establishment">
+                <div class="text-danger mt-2" *ngIf="invalidFieldMonitoring('business_name_establishment')">
+                    <p>{{ getErrorMessageEditIncome("business_name_establishment") }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="nit" class="col-sm-4 col-form-label">NIT</label>
+            <div class="col-sm-8">
+                <input type="text" formControlName="nit" class="form-control" id="nit">
+                <div class="text-danger mt-2" *ngIf="invalidFieldMonitoring('nit')">
+                    <p>{{ getErrorMessageEditIncome("nit") }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="create_by" class="col-sm-4 col-form-label">Creado por</label>
+            <div class="col-sm-8">
+                <select class="form-control" formControlName="create_by" id="create_by">
+                    <option *ngFor="let user of listUsers" [value]="user._id">{{user.name}}</option>
+                </select>
+                <div class="text-danger mt-2" *ngIf="invalidFieldMonitoring('create_by')">
+                    <p>{{ getErrorMessageEditIncome("create_by") }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="informant_name" class="col-sm-4 col-form-label">Nombre del informante</label>
+            <div class="col-sm-8">
+                <input type="text" class="form-control" formControlName="informant_name" id="informant_name">
+                <div class="text-danger mt-2" *ngIf="invalidFieldMonitoring('informant_name')">
+                    <p>{{ getErrorMessageEditIncome("informant_name") }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="identification" class="col-sm-4 col-form-label">Identificación del informante</label>
+            <div class="col-sm-8">
+                <input type="text" class="form-control" formControlName="identification" id="identification">
+                <div class="text-danger mt-2" *ngIf="invalidFieldMonitoring('identification')">
+                    <p>{{ getErrorMessageEditIncome("identification") }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="person_type" class="col-sm-4 col-form-label">Tipo de persona</label>
+            <div class="col-sm-8">
+                <select class="form-control" formControlName="person_type" id="person_type">
+                    <option value="natural">Persona natural</option>
+                    <option value="juridica">Persona Juridica</option>
+                </select>
+                <div class="text-danger mt-2" *ngIf="invalidFieldMonitoring('person_type')">
+                    <p>{{ getErrorMessageEditIncome("person_type") }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="localization" class="col-sm-4 col-form-label">Localización</label>
+            <div class="col-sm-8">
+                <select class="form-control" id="localization" formControlName="localization">
+                    <option value="1">San Andrés</option>
+                    <option value="2">Providencia</option>
+                    <option value="3">Santa Catalina</option>
+                </select>
+                <div class="text-danger mt-2" *ngIf="invalidFieldMonitoring('localization')">
+                    <p>{{ getErrorMessageEditIncome("localization") }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="vegetables" class="col-sm-4 col-form-label">Verduras, hortalizas y frutas</label>
+            <div class="col-sm-8 select-icon">
+                <select class="form-control" id="vegetables" (change)="getIndexArrayVegetables($event)">
+                    <option *ngFor="let vegetable of this.formMonitoring.value.vegetables; let i = index" [value]="i"> {{vegetable.name}}</option>
+                </select>
+                <a class="link mr-2"
+                *ngIf="this.formMonitoring.value.vegetables.length > 0"
+                (click)="openModalEditProduct('vegetables', this.formMonitoring.value.vegetables, this.selectVegetables)"
+                placement="top" ngbTooltip="Edit">
+                    <i class="ti-pencil text-info m-l-10 m-r-10 cursor" ></i>  
+                </a>
+            </div>
+            <div class="text-danger mt-2" *ngIf="invalidFieldMonitoring('vegetables')">
+                <p>{{ getErrorMessageEditIncome("vegetables") }}</p>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="tubers" class="col-sm-4 col-form-label">Tubérculos, raíces y plátanos</label>
+            <div class="col-sm-8 select-icon">
+                <select class="form-control" id="tubers" (change)="getIndexArrayVegetables($event)">
+                    <option *ngFor="let tuber of this.formMonitoring.value.tubers; let i = index" [value]="i"> {{tuber.name}}</option>
+                </select>
+                <a class="link mr-2"
+                *ngIf="this.formMonitoring.value.tubers.length > 0"
+                (click)="openModalEditProduct('tubers', this.formMonitoring.value.tubers, this.selectTubers)"
+                placement="top" ngbTooltip="Edit">
+                    <i class="ti-pencil text-info m-l-10 m-r-10 cursor" ></i>  
+                </a>
+                <div class="text-danger mt-2" *ngIf="invalidFieldMonitoring('tubers')">
+                    <p>{{ getErrorMessageEditIncome("tubers") }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="grains" class="col-sm-4 col-form-label">Granos y cereales</label>
+            <div class="col-sm-8 select-icon">
+                <select class="form-control" id="grains" (change)="getIndexArrayGrains($event)">
+                    <option *ngFor="let grain of this.formMonitoring.value.grains; let i = index" [value]="i"> {{grain.name}}</option>
+                </select>
+                <a class="link mr-2"
+                *ngIf="this.formMonitoring.value.grains.length > 0"
+                (click)="openModalEditProduct('grain', this.formMonitoring.value.grains, this.selectGrains)"
+                placement="top" ngbTooltip="Edit">
+                    <i class="ti-pencil text-info m-l-10 m-r-10 cursor" ></i>  
+                </a>
+                <div class="text-danger mt-2" *ngIf="invalidFieldMonitoring('grains')">
+                    <p>{{ getErrorMessageEditIncome("grains") }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="meats" class="col-sm-4 col-form-label">Carnes, huevos y lácteos</label>
+            <div class="col-sm-8 select-icon">
+                <select class="form-control" id="meats" (change)="getIndexArrayMeats($event)">
+                    <option *ngFor="let meat of this.formMonitoring.value.meats; let i = index" [value]="i"> {{meat.name}}</option>
+                </select>
+                <a class="link mr-2"
+                *ngIf="this.formMonitoring.value.meats.length > 0"
+                (click)="openModalEditProduct('meats', this.formMonitoring.value.meats, this.selectMeats)"
+                placement="top" ngbTooltip="Edit">
+                    <i class="ti-pencil text-info m-l-10 m-r-10 cursor" ></i>  
+                </a>
+                <div class="text-danger mt-2" *ngIf="invalidFieldMonitoring('meats')">
+                    <p>{{ getErrorMessageEditIncome("meats") }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="processed_products" class="col-sm-4 col-form-label">Productos procesados</label>
+            <div class="col-sm-8 select-icon">
+                <select class="form-control" id="processed_products" (change)="getIndexArrayMeats($event)">
+                    <option *ngFor="let processed_product of this.formMonitoring.value.processed_products; let i = index" [value]="i"> {{processed_product.name}}</option>
+                </select>
+                <a class="link mr-2"
+                *ngIf="this.formMonitoring.value.processed_products.length > 0"
+                (click)="openModalEditProduct('processed_products', this.formMonitoring.value.processed_products, this.selectProcessed_products)"
+                placement="top" ngbTooltip="Edit">
+                    <i class="ti-pencil text-info m-l-10 m-r-10 cursor" ></i>  
+                </a>
+                <div class="text-danger mt-2" *ngIf="invalidFieldMonitoring('processed_products')">
+                    <p>{{ getErrorMessageEditIncome("processed_products") }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancelar</button>
+    
+            <button type="submit" class="btn btn-primary">Editar</button>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,99 @@
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title mb-0">Tabla de Productor Agropecuario</h4>
+                <div class="d-md-flex mt-3">
+                    <input type="text" name="search" placeholder="Buscar productor agropecuario" class="form-control w-auto" (input)="filterAgriculturalProducer($event)" />
+                    <button *ngIf="id_view === 0" type="button" class="btn btn-danger ml-1" (click)='giveDataOff(false)'>
+                        <i class="fas fa-minus-circle" name="Inhabilitados"></i> 
+                    </button>
+                    <button *ngIf="id_view !== 0" type="button" class="btn btn-success ml-1" (click)='giveDataOff(true)'>
+                        <i class="fas fa-check-circle" name="Habilitados"></i> 
+                    </button>   
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-striped no-wrap border mt-4">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Data genérica</th>
+                                <th>Unidad productiva</th>
+                                <th>Producción de la Unidad</th>
+                                <th>Bovinos</th>
+                                <th>Porcinos</th>
+                                <th>Aves</th>
+                                <th>Fecha de Creación</th>
+                                <th>Fecha de Actualización</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let data of agriculturalProducerArray | slice: (numberPages-1) * numberDataShow : (numberPages-1) * numberDataShow + numberDataShow; let i = index">
+                                <td class="justify-content-center">{{getPositionAgriculturalProducer(data._id)}}</td>
+                                <!-- Generic-data -->
+                                <td class="justify-content-center">
+                                    Editar
+                                    <a (click)="openModalEditGenericData(data)" class="link mr-2"
+                                      placement="top" ngbTooltip="Edit">
+                                      <i class="ti-pencil text-info m-r-10 cursor" ></i>
+                                    </a>
+                                </td>
+                                <!-- Productive-unit -->
+                                <td class="justify-content-center">
+                                    Editar
+                                    <a (click)="openModalProductiveUnit(data)" class="link mr-2"
+                                      placement="top" ngbTooltip="Edit">
+                                      <i class="ti-pencil text-info m-r-10 cursor" ></i>
+                                    </a>
+                                </td>
+                                <!-- LiveStockInventory -->
+                                <td class="justify-content-center">
+                                    Editar
+                                    <a (click)="openModalEditLivestockInv(data)" class="link mr-2"
+                                      placement="top" ngbTooltip="Edit">
+                                      <i class="ti-pencil text-info m-r-10 cursor" ></i>
+                                    </a>
+                                </td>
+                                <!-- Cattle -->
+                                <td class="justify-content-center">
+                                    Editar
+                                    <a (click)="openModalEditCattle(data)" class="link mr-2"
+                                      placement="top" ngbTooltip="Edit">
+                                      <i class="ti-pencil text-info m-r-10 cursor" ></i>
+                                    </a>
+                                </td>
+                                <!-- Pigs -->
+                                <td class="justify-content-center">
+                                    Editar
+                                    <a (click)="openModalEditPigs(data)" class="link mr-2"
+                                      placement="top" ngbTooltip="Edit">
+                                      <i class="ti-pencil text-info m-r-10 cursor" ></i>
+                                    </a>
+                                </td>
+                                <!-- Birds -->
+                                <td class="justify-content-center">
+                                    Editar
+                                    <a (click)="openModalEditBirds(data)" class="link mr-2"
+                                      placement="top" ngbTooltip="Edit">
+                                      <i class="ti-pencil text-info m-r-10 cursor" ></i>
+                                    </a>
+                                </td>
+                                <td class="justify-content-center">{{data.createdAt | date:"dd/MM/YY - hh:mm"}}</td>
+                                <td class="justify-content-center">{{data.updatedAt | date:"dd/MM/YY - hh:mm"}}</td>
+                                <td *ngIf="data.is_active; else agriculturalProducerDisabled" (click)="changeStatus(data)"><span class="btn btn-rounded btn-success">Activado</span> </td>
+                                <ng-template #agriculturalProducerDisabled><td (click)="changeStatus(data)"> <span class="btn btn-rounded btn-danger">Desactivado</span></td> </ng-template>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="d-flex justify-content-center mt-2">    
+                    <ngb-pagination [(page)]="numberPages"
+                    [pageSize]="numberDataShow"
+                    [collectionSize]="agriculturalProducerArray.length"
+                    [maxSize]="5"></ngb-pagination>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

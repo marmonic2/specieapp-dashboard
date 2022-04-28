@@ -1,0 +1,234 @@
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title mb-0">Tabla de Formularios </h4>
+                <div class="d-md-flex mt-3">
+                    <input type="text" name="search" placeholder="Buscar formulario" class="form-control w-auto" (input)="filterForm($event)" />
+                    <button type="button"  class="btn btn-primary ml-auto" (click)="openModal(modalAddForm)"><i class="fas fa-plus"></i> Agregar Formulario</button>
+                    <button *ngIf="id_view === 0" type="button" class="btn btn-danger ml-1" (click)='giveDataOff(false)'>
+                        <i class="fas fa-minus-circle" name="Inhabilitados"></i> 
+                    </button>
+                    <button *ngIf="id_view !== 0" type="button" class="btn btn-success ml-1" (click)='giveDataOff(true)'>
+                        <i class="fas fa-check-circle" name="Habilitados"></i> 
+                    </button>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-striped no-wrap border mt-4">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Código</th>
+                                <th>Categoría</th>
+                                <th>Descripción</th>
+                                <th>Módulo Asociado</th>
+                                <th>Fecha de Aprobación</th>
+                                <th>Fecha de Creación</th>
+                                <th>Fecha de Actualización</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let data of formArray | slice: (numberPages-1) * numberDataShow : (numberPages-1) * numberDataShow + numberDataShow; let i = index">
+                                <td class="justify-content-center">{{getPositionForm(data._id)}}</td>
+                                <td class="justify-content-center">{{data.code}}</td>
+                                <td class="justify-content-center">{{data.category}}</td>
+                                <td class="justify-content-center">{{data.description}}</td>
+                                <td class="justify-content-center">{{data.module.description}}</td>
+                                <td class="justify-content-center">{{data.approvalDate | date:"dd/MM/YY - hh:mm"}}</td>
+                                <td class="justify-content-center">{{data.createdAt | date:"dd/MM/YY - hh:mm"}}</td>
+                                <td class="justify-content-center">{{data.updatedAt | date:"dd/MM/YY - hh:mm"}}</td>
+                                <td *ngIf="data.is_active; else formDisabled" (click)="changeStatus(data)"><span class="btn btn-rounded btn-success">Activado</span> </td>
+                                <ng-template #formDisabled><td (click)="changeStatus(data)"> <span class="btn btn-rounded btn-danger">Desactivado</span></td> </ng-template>
+                                <td>
+                                    <a (click)="openModalEdit(modalEditForm, data, pos)" class="link mr-2"
+                                      placement="top" ngbTooltip="Edit">
+                                      <i class="ti-pencil text-info m-r-10 cursor" ></i>
+                                    </a>
+                                    <a (click)="openModalView(data)" class="link mr-2"
+                                      placement="top" ngbTooltip="View">
+                                      <i class="fas fa-eye text-info m-r-10 cursor" ></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="d-flex justify-content-center mt-2">    
+                    <ngb-pagination [(page)]="numberPages"
+                    [pageSize]="numberDataShow"
+                    [collectionSize]="formArray.length"
+                    [maxSize]="5"></ngb-pagination>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--- Modal add form -->
+<ng-template #modalAddForm let-modal>
+  
+    <div class="modal-header">
+  
+      <h5 class="modal-title" id="editLabel">Agregar Formulario</h5>
+  
+      <button type="button" class="close" (click)="closeModal()" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+  
+    </div>
+  
+    <div class="modal-body">
+  
+      <form [formGroup]="formForm" (ngSubmit)="saveDataForm()">
+  
+        <div class="form-group row">
+            <label for="code" class="col-sm-4 col-form-label">Código </label>
+            <div class="col-sm-8">
+                <select class="form-control" formControlName="code" id="code">
+                    <option *ngFor="let item of formatArray" [value]="item">{{item}}</option>
+                </select>
+                <div class="text-danger mt-2" *ngIf="invalidField('code')">
+                    <p>{{ getErrorMessage("code") }}</p>
+                </div>
+            </div>
+        </div> 
+
+        <div class="form-group row">
+            <label for="description" class="col-sm-4 col-form-label">Descripción</label>
+            <div class="col-sm-8">
+                <input type="text" class="form-control" formControlName="description" id="description">
+                <div class="text-danger mt-2" *ngIf="invalidField('description')">
+                    <p>{{ getErrorMessage("description") }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="module" class="col-sm-4 col-form-label">Módulo</label>
+            <div class="col-sm-8">
+                <select class="form-control" formControlName="module" id="module" (change)="changeSelect($event.target.value)">
+                    <option *ngFor="let item of modulesArray" [value]="item._id">{{item.description}}</option>
+                </select>
+                <div class="text-danger mt-2" *ngIf="invalidField('module')">
+                    <p>{{ getErrorMessage("module") }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group row" *ngIf="inputData">
+            <label for="category" class="col-sm-4 col-form-label">Categoría</label>
+            <div class="col-sm-8">
+                <select class="form-control" formControlName="category" id="category">
+                    <option value="Artesanal">Artesanal</option>
+                    <option value="Industrial">Industrial</option>
+                </select>
+                <div class="text-danger mt-2" *ngIf="invalidFieldE('category')">
+                    <p>{{ getErrorMessageEdit("category") }}</p>
+                </div>
+            </div>
+        </div> 
+
+        <div class="form-group row">
+            <label for="approvalDate" class="col-sm-4 col-form-label">Fecha Aprobado</label>
+            <div class="col-sm-8">
+                <input type="date" value="approvalDate" class="form-control" formControlName="approvalDate" id="approvalDate">
+                <div class="text-danger mt-2" *ngIf="invalidField('approvalDate')">
+                    <p>{{ getErrorMessage("approvalDate") }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancelar</button>
+  
+          <button type="submit" class="btn btn-primary">Guardar</button>
+        </div>
+      </form>
+    </div>
+</ng-template>
+
+<!--- Modal edit form -->
+<ng-template #modalEditForm let-modal>
+  
+    <div class="modal-header">
+  
+      <h5 class="modal-title" id="editLabel">Editar Formulario</h5>
+  
+      <button type="button" class="close" (click)="closeModal()" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+  
+    </div>
+  
+    <div class="modal-body">
+  
+      <form [formGroup]="formEditForm" (ngSubmit)="updateDataForm()">
+  
+
+        <div class="form-group row">
+            <label for="code" class="col-sm-4 col-form-label">Código</label>
+            <div class="col-sm-8">
+                <select class="form-control" formControlName="code" id="code">
+                    <option *ngFor="let item of formatArray" [value]="item">{{item}}</option>
+                </select>
+                <div class="text-danger mt-2" *ngIf="invalidFieldE('code')">
+                    <p>{{ getErrorMessageEdit("code") }}</p>
+                </div>
+            </div>
+        </div> 
+
+        <div class="form-group row">
+            <label for="description" class="col-sm-4 col-form-label">Descripción</label>
+            <div class="col-sm-8">
+                <input type="text" class="form-control" formControlName="description" id="description">
+                <div class="text-danger mt-2" *ngIf="invalidFieldE('description')">
+                    <p>{{ getErrorMessageEdit("description") }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="module" class="col-sm-4 col-form-label">Módulo</label>
+            <div class="col-sm-8">
+                <select class="form-control" formControlName="module" id="module" (change)="changeSelect($event.target.value)">
+                    <option *ngFor="let item of modulesArray" [value]="item._id">{{item.description}}</option>
+                </select>
+                <div class="text-danger mt-2" *ngIf="invalidFieldE('module')">
+                    <p>{{ getErrorMessageEdit("module") }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group row" *ngIf="inputData">
+            <label for="category" class="col-sm-4 col-form-label">Categoría</label>
+            <div class="col-sm-8">
+                <select class="form-control" formControlName="category" id="category">
+                    <option value="Artesanal">Artesanal</option>
+                    <option value="Industrial">Industrial</option>
+                </select>
+                <div class="text-danger mt-2" *ngIf="invalidFieldE('category')">
+                    <p>{{ getErrorMessageEdit("category") }}</p>
+                </div>
+            </div>
+        </div> 
+
+        <div class="form-group row">
+            <label for="approvalDate" class="col-sm-4 col-form-label">Fecha Aprobado</label>
+            <div class="col-sm-8">
+                <input type="date" class="form-control" formControlName="approvalDate" id="approvalDate">
+                <div class="text-danger mt-2" *ngIf="invalidFieldE('approvalDate')">
+                    <p>{{ getErrorMessageEdit("approvalDate") }}</p>
+                </div>
+            </div>
+        </div> 
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancelar</button>
+  
+          <button type="submit" class="btn btn-primary">Guardar</button>
+        </div>
+      </form>
+    </div>
+</ng-template>

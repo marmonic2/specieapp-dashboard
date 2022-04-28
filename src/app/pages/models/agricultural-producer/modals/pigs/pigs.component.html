@@ -1,0 +1,126 @@
+<div class="modal-header">
+    <h5 class="modal-title" id="editLabel">Editar Porcinos</h5>
+    <button type="button" class="close" (click)="closeModal()" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
+<div class="modal-body">
+    <form [formGroup]="formEditPig" (ngSubmit)="saveChange()">
+        <div class="form-group row">
+            <div>
+                <label for="number_females_0_to_6_months" class="col-sm-10 col-form-label"># Hembras 0 a 6 meses</label>
+                <div class="col-sm-10">
+                    <input type="number" class="form-control"  formControlName="number_females_0_to_6_months" id="number_females_0_to_6_months">
+                    <div class="text-danger mt-2" *ngIf="invalidField('number_females_0_to_6_months')">
+                        <p>{{ getErrorMessageEdit("number_females_0_to_6_months") }}</p>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <label for="number_females_6_to_12_months" class="col-sm-10 col-form-label"># Hembras 6 a 12 meses</label>
+                <div class="col-sm-10">
+                    <input type="number" class="form-control"  formControlName="number_females_6_to_12_months" id="number_females_6_to_12_months">
+                    <div class="text-danger mt-2" *ngIf="invalidField('number_females_6_to_12_months')">
+                        <p>{{ getErrorMessageEdit("number_females_6_to_12_months") }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div>
+                <label for="number_females_12_to_24_months" class="col-sm-10 col-form-label"># Hembras 12 a 24 meses</label>
+                <div class="col-sm-10">
+                    <input type="number" class="form-control"  formControlName="number_females_12_to_24_months" id="number_females_12_to_24_months">
+                    <div class="text-danger mt-2" *ngIf="invalidField('number_females_12_to_24_months')">
+                        <p>{{ getErrorMessageEdit("number_females_12_to_24_months") }}</p>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <label for="number_females_older_than_24_months" class="col-sm-10 col-form-label"># Hembras > 24 meses</label>
+                <div class="col-sm-10">
+                    <input type="number" class="form-control"  formControlName="number_females_older_than_24_months" id="number_females_older_than_24_months">
+                    <div class="text-danger mt-2" *ngIf="invalidField('number_females_older_than_24_months')">
+                        <p>{{ getErrorMessageEdit("number_females_older_than_24_months") }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div>
+                <label for="number_males_0_to_6_months" class="col-sm-10 col-form-label"># Machos 0 a 6 meses</label>
+                <div class="col-sm-10">
+                    <input type="number" class="form-control"  formControlName="number_males_0_to_6_months" id="number_males_0_to_6_months">
+                    <div class="text-danger mt-2" *ngIf="invalidField('number_males_0_to_6_months')">
+                        <p>{{ getErrorMessageEdit("number_males_0_to_6_months") }}</p>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <label for="number_males_6_to_12_months" class="col-sm-10 col-form-label"># Machos 6 a 12 meses</label>
+                <div class="col-sm-10">
+                    <input type="number" class="form-control"  formControlName="number_males_6_to_12_months" id="number_males_6_to_12_months">
+                    <div class="text-danger mt-2" *ngIf="invalidField('number_males_6_to_12_months')">
+                        <p>{{ getErrorMessageEdit("number_males_6_to_12_months") }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div>
+                <label for="number_males_12_to_24_months" class="col-sm-10 col-form-label"># Machos 12 a 24 meses</label>
+                <div class="col-sm-10">
+                    <input type="number" class="form-control"  formControlName="number_males_12_to_24_months" id="number_males_12_to_24_months">
+                    <div class="text-danger mt-2" *ngIf="invalidField('number_males_12_to_24_months')">
+                        <p>{{ getErrorMessageEdit("number_males_12_to_24_months") }}</p>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <label for="number_males_older_than_24_months" class="col-sm-10 col-form-label"># Machos > 24 meses</label>
+                <div class="col-sm-10">
+                    <input type="number" class="form-control"  formControlName="number_males_older_than_24_months" id="number_males_older_than_24_months">
+                    <div class="text-danger mt-2" *ngIf="invalidField('number_males_older_than_24_months')">
+                        <p>{{ getErrorMessageEdit("number_males_older_than_24_months") }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div>
+                <label for="number_of_females" class="col-sm-10 col-form-label"># de Hembras</label>
+                <div class="col-sm-10">
+                    <input type="number" class="form-control"  formControlName="number_of_females" id="number_of_females">
+                    <div class="text-danger mt-2" *ngIf="invalidField('number_of_females')">
+                        <p>{{ getErrorMessageEdit("number_of_females") }}</p>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <label for="number_of_males" class="col-sm-10 col-form-label"># de Machos</label>
+                <div class="col-sm-10">
+                    <input type="number" class="form-control"  formControlName="number_of_males" id="number_of_males">
+                    <div class="text-danger mt-2" *ngIf="invalidField('number_of_males')">
+                        <p>{{ getErrorMessageEdit("number_of_males") }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div>
+                <label for="total_pigs" class="col-sm-10 col-form-label">Total</label>
+                <div class="col-sm-10">
+                    <input type="number" class="form-control"  formControlName="total_pigs" id="total_pigs">
+                    <div class="text-danger mt-2" *ngIf="invalidField('total_pigs')">
+                        <p>{{ getErrorMessageEdit("total_pigs") }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancelar</button>
+            <button type="submit" class="btn btn-primary">Editar</button>
+        </div>
+    </form>
+</div>

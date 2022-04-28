@@ -1,0 +1,240 @@
+<!--- Modal edit Effort Characteristics 1 -->
+<div class="modal-header">
+  
+  <h5 class="modal-title" id="editLabel">Características de los artes y/o métodos de pesca</h5>
+
+  <button type="button" class="close" (click)="closeModal()" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+
+</div>
+
+<div class="modal-body">
+  <form [formGroup]="formEditEffortCharacteristic" (ngSubmit)="saveChangeEffortCharacteristic()">
+
+    <div class="form-group row">
+      <label for="long_line" class="col-sm-4 col-form-label">Long line</label>
+      <div class="col-sm-8">
+          <select class="form-control" formControlName="long_line" id="long_line">
+              <option value="Pelágico">Pelágico</option>
+              <option value="Demersal">Demersal</option>
+              <option value="Tiburoneo">Tiburoneo</option>
+          </select>
+          <div class="text-danger mt-2" *ngIf="invalidFieldEffortCharacteristic('long_line')">
+              <p>{{ getErrorMessageEditEffortCharacteristic("long_line") }}</p>
+          </div>
+      </div>
+    </div> 
+
+    <div class="form-group row">
+      <label for="reel" class="col-sm-4 col-form-label">Reel</label>
+      <div class="col-sm-8 select-icon">
+        <select class="form-control" (change)="onChange($event)" id="reel">
+            <option *ngFor="let data of formEditEffortCharacteristic.value.reel; let i=index" [value]="i">
+                {{data.type}}
+            </option>
+        </select>
+        <div class="text-danger mt-2" *ngIf="invalidFieldEffortCharacteristic('reel')">
+            <p>{{ getErrorMessageEditEffortCharacteristic("reel") }}</p>
+        </div>
+        <a (click)="openModalReel(editReelModal, posIncome)" class="link mr-2 ml-2" [ngClass]="{'disable': posIncome === undefined}" placement="top" ngbTooltip="Edit">
+            <i class="ti-pencil text-info m-r-10 cursor" [ngClass]="{'disable': posIncome === undefined, 'text-info': posIncome !== undefined}"></i>
+        </a>
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <label for="longLine" class="col-sm-4 col-form-label">Subgrupos</label>
+      <div class="col-sm-8 select-icon">
+        <select class="form-control" (change)="onChangeTwo($event)" id="longLine">
+            <option *ngFor="let data of formEditEffortCharacteristic.value.longLine; let i=index" [value]="i">
+                Set {{i + 1}}
+            </option>
+        </select>
+        <div class="text-danger mt-2" *ngIf="invalidFieldEffortCharacteristic('longLine')">
+            <p>{{ getErrorMessageEditEffortCharacteristic("longLine") }}</p>
+        </div>
+        <a (click)="openModalLongLine(editLongLineModal, posIncomeTwo)" class="link mr-2 ml-2" [ngClass]="{'disable': posIncome === undefined}" placement="top" ngbTooltip="Edit">
+            <i class="ti-pencil text-info m-r-10 cursor" [ngClass]="{'disable': posIncome === undefined, 'text-info': posIncome !== undefined}"></i>
+        </a>
+      </div>
+    </div>
+
+    <div class="form-group center">
+        <label for="general_information" class="col-sm-2 col-form-label">Buceo</label>
+        <a (click)="openModalDiving()" class="link" placement="top" ngbTooltip="Edit">
+            <i class="ti-pencil text-info m-r-10 cursor"></i>
+        </a>
+    </div>
+    <div class="form-group center">
+        <label for="general_information" class="col-sm-5 col-form-label">Nasas Langosteras</label>
+        <a (click)="openModalLobsterPots()" class="link" placement="top" ngbTooltip="Edit">
+            <i class="ti-pencil text-info m-r-10 cursor"></i>
+        </a>
+    </div>
+    <div class="form-group center">
+        <label for="general_information" class="col-sm-5 col-form-label">Nasas de Pescados</label>
+        <a (click)="openModalFishPots()" class="link" placement="top" ngbTooltip="Edit">
+            <i class="ti-pencil text-info m-r-10 cursor"></i>
+        </a>
+    </div>
+
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancelar</button>
+
+      <button type="submit" class="btn btn-primary">Editar</button>
+    </div>
+  </form>
+</div>
+
+<!--- Modal edit Reel -->
+<ng-template #editReelModal let-modal>
+  
+  <div class="modal-header">
+
+    <h5 class="modal-title" id="editLabel">Reel</h5>
+
+    <button type="button" class="close" (click)="closeModalS()" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+
+  </div>
+
+  <div class="modal-body">
+    <form [formGroup]="formEditReel" (ngSubmit)="saveChangeReel()">
+      <div class="form-group row">
+        <label for="type" class="col-sm-4 col-form-label">Tipo</label>
+        <div class="col-sm-8">
+            <select class="form-control" formControlName="type" id="type">
+              <option value="Eléctricos">Eléctricos</option>
+              <option value="Manual">Manual</option>
+            </select>
+            <div class="text-danger mt-2" *ngIf="invalidFieldReel('type')">
+                <p>{{ getErrorMessageEditReel("type") }}</p>
+            </div>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="number_reel_perday" class="col-sm-4 col-form-label">Número Reel/día</label>
+        <div class="col-sm-8">
+            <input type="number" class="form-control"  formControlName="number_reel_perday" id="number_reel_perday">
+            <div class="text-danger mt-2" *ngIf="invalidFieldReel('number_reel_perday')">
+                <p>{{ getErrorMessageEditReel("number_reel_perday") }}</p>
+            </div>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="number_hooks" class="col-sm-4 col-form-label">Número Anzuelos</label>
+        <div class="col-sm-8">
+            <input type="number" class="form-control"  formControlName="number_hooks" id="number_hooks">
+            <div class="text-danger mt-2" *ngIf="invalidFieldReel('number_hooks')">
+                <p>{{ getErrorMessageEditReel("number_hooks") }}</p>
+            </div>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="hook_type" class="col-sm-4 col-form-label">Tipo Anzuelo</label>
+        <div class="col-sm-8">
+            <input type="text" class="form-control"  formControlName="hook_type" id="hook_type">
+            <div class="text-danger mt-2" *ngIf="invalidFieldReel('hook_type')">
+                <p>{{ getErrorMessageEditReel("hook_type") }}</p>
+            </div>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="hook_gauge" class="col-sm-4 col-form-label">Calibre Anzuelo</label>
+        <div class="col-sm-8">
+            <input type="number" class="form-control"  formControlName="hook_gauge" id="hook_gauge">
+            <div class="text-danger mt-2" *ngIf="invalidFieldReel('hook_gauge')">
+                <p>{{ getErrorMessageEditReel("hook_gauge") }}</p>
+            </div>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="effort_reel_perday" class="col-sm-4 col-form-label">Esfuerzo (reel/día)</label>
+        <div class="col-sm-8">
+            <input type="number" class="form-control"  formControlName="effort_reel_perday" id="effort_reel_perday">
+            <div class="text-danger mt-2" *ngIf="invalidFieldReel('effort_reel_perday')">
+                <p>{{ getErrorMessageEditReel("effort_reel_perday") }}</p>
+            </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeModalS()">Cancelar</button>
+
+        <button type="submit" class="btn btn-primary">Editar</button>
+      </div>
+    </form>
+  </div>
+</ng-template>
+
+<!--- Modal edit LongLine -->
+<ng-template #editLongLineModal let-modal>
+  
+  <div class="modal-header">
+
+    <h5 class="modal-title" id="editLabel">LongLine</h5>
+
+    <button type="button" class="close" (click)="closeModalS()" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+
+  </div>
+
+  <div class="modal-body">
+    <form [formGroup]="formEditLongLine" (ngSubmit)="saveChangeLongLine()">
+      <div class="form-group row">
+        <label for="sets_number_perday" class="col-sm-4 col-form-label">Número de Lances/día</label>
+        <div class="col-sm-8">
+            <input type="number" class="form-control"  formControlName="sets_number_perday" id="sets_number_perday">
+            <div class="text-danger mt-2" *ngIf="invalidFieldLongLine('sets_number_perday')">
+                <p>{{ getErrorMessageEditLongLine("sets_number_perday") }}</p>
+            </div>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="sets_number" class="col-sm-4 col-form-label">Número de Lances</label>
+        <div class="col-sm-8">
+            <input type="number" class="form-control"  formControlName="sets_number" id="sets_number">
+            <div class="text-danger mt-2" *ngIf="invalidFieldLongLine('sets_number')">
+                <p>{{ getErrorMessageEditLongLine("sets_number") }}</p>
+            </div>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="sets_hook_type" class="col-sm-4 col-form-label">Tipo Anzuelo</label>
+        <div class="col-sm-8">
+            <input type="text" class="form-control"  formControlName="sets_hook_type" id="sets_hook_type">
+            <div class="text-danger mt-2" *ngIf="invalidFieldLongLine('sets_hook_type')">
+                <p>{{ getErrorMessageEditLongLine("sets_hook_type") }}</p>
+            </div>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="sets_hook_gauge" class="col-sm-4 col-form-label">Calibre Anzuelo</label>
+        <div class="col-sm-8">
+            <input type="number" class="form-control"  formControlName="sets_hook_gauge" id="sets_hook_gauge">
+            <div class="text-danger mt-2" *ngIf="invalidFieldLongLine('sets_hook_gauge')">
+                <p>{{ getErrorMessageEditLongLine("sets_hook_gauge") }}</p>
+            </div>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="sets_effort_hook_perday" class="col-sm-4 col-form-label">Esfuerzo (Anzuelo/día)</label>
+        <div class="col-sm-8">
+            <input type="number" class="form-control"  formControlName="sets_effort_hook_perday" id="sets_effort_hook_perday">
+            <div class="text-danger mt-2" *ngIf="invalidFieldLongLine('sets_effort_hook_perday')">
+                <p>{{ getErrorMessageEditLongLine("sets_effort_hook_perday") }}</p>
+            </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeModalS()">Cancelar</button>
+
+        <button type="submit" class="btn btn-primary">Editar</button>
+      </div>
+    </form>
+  </div>
+</ng-template>

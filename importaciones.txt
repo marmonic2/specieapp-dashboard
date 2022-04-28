@@ -1,0 +1,11 @@
+npm install typedoc -D
+
+//Ejecutar DOCS
+npx typedoc --out docs
+
+//Guía de estilos eslint
+npm install -g eslint -D
+eslint --init
+
+npm i ngx-quill
+npm install quill

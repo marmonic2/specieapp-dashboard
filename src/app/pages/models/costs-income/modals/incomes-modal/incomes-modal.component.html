@@ -1,0 +1,53 @@
+<!--- Modal edit Incomes -->
+<div class="modal-header">
+  
+    <h5 class="modal-title" id="editLabel">Editar Gasto</h5>
+
+    <button type="button" class="close" (click)="closeModal()" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+
+  </div>
+ <div class="modal-body">
+  
+    <form [formGroup]="formEditIncome" (ngSubmit)="saveChangeIncome(formEditIncome.value)">
+
+      <div class="form-group row">
+          <label for="description" class="col-sm-4 col-form-label">Gasto</label>
+          <div class="col-sm-8">
+              <select class="form-control" formControlName="description" id="description">
+                  <option *ngFor="let item of incomesArray" [value]="item">{{item}}</option>
+              </select>
+              <div class="text-danger mt-2" *ngIf="invalidFieldIncome('description')">
+                  <p>{{ getErrorMessageEditIncome("description") }}</p>
+              </div>
+          </div>
+      </div>
+
+      <div class="form-group row">
+          <label for="lastSixMonth" class="col-sm-4 col-form-label">Últimos 6 meses</label>
+          <div class="col-sm-8">
+              <input type="number" class="form-control"  formControlName="lastSixMonth" id="lastSixMonth">
+              <div class="text-danger mt-2" *ngIf="invalidFieldIncome('lastSixMonth')">
+                  <p>{{ getErrorMessageEditIncome("lastSixMonth") }}</p>
+              </div>
+          </div>
+      </div>
+
+      <div class="form-group row">
+          <label for="totalCycle" class="col-sm-4 col-form-label">Total por ciclo</label>
+          <div class="col-sm-8">
+              <input type="number" class="form-control"  formControlName="totalCycle" id="totalCycle">
+              <div class="text-danger mt-2" *ngIf="invalidFieldIncome('totalCycle')">
+                  <p>{{ getErrorMessageEditIncome("totalCycle") }}</p>
+              </div>
+          </div>
+      </div> 
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancelar</button>
+
+        <button type="submit" class="btn btn-primary">Editar</button>
+      </div>
+    </form>
+</div>

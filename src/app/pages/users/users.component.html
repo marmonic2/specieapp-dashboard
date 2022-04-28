@@ -1,0 +1,287 @@
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title mb-0">Tabla de Usuarios </h4>
+                <div class="d-md-flex mt-3">
+                    <input type="text" name="search" placeholder="Buscar usuario" class="form-control w-auto" (input)="filterUsers($event)" />
+                    <button type="button"  class="btn btn-primary ml-auto" (click)="openModal(modalAddUser)"><i class="fas fa-plus"></i> Agregar Usuario</button>
+                    <button *ngIf="id_view === 0" type="button" class="btn btn-danger ml-1" (click)='giveDataOff(false)'>
+                        <i class="fas fa-minus-circle" name="Inhabilitados"></i> 
+                    </button>
+                    <button *ngIf="id_view !== 0" type="button" class="btn btn-success ml-1" (click)='giveDataOff(true)'>
+                        <i class="fas fa-check-circle" name="Habilitados"></i> 
+                    </button>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-striped no-wrap border mt-4">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Correo</th>
+                                <th>Nombre</th>
+                                <th>Apellido</th>
+                                <th>Área Asignada</th>
+                                <th>Rol</th>
+                                <th>Fecha de Creación</th>
+                                <th>Fecha de Actualización</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let user of usersArray | slice: (numberPages-1) * numberUserShow : (numberPages-1) * numberUserShow + numberUserShow">
+                                <td class="justify-content-center">{{getPositionUser(user._id)}}</td>
+                                <td class="justify-content-center">{{user.email}}</td>
+                                <td class="justify-content-center">{{user.name}}</td>
+                                <td class="justify-content-center">{{user.surname}}</td>
+                                <td class="justify-content-center">{{user.area}}</td>
+                                <td class="justify-content-center">{{filtroDataMaximus(user.rol)}}</td>
+                                <td class="justify-content-center">{{user.createdAt | date:"dd/MM/YY - hh:mm"}}</td>
+                                <td class="justify-content-center">{{user.updatedAt | date:"dd/MM/YY - hh:mm"}}</td>
+                                <td *ngIf="user.is_active; else userDisabled" (click)="changeStatus(user)"><span class="btn btn-rounded btn-success">Activado</span> </td>
+                                <ng-template #userDisabled><td (click)="changeStatus(user)"> <span class="btn btn-rounded btn-danger">Desactivado</span></td> </ng-template>
+                                <td>
+                                    <a (click)="openModalEdit(editUserModal, user)" class="link mr-2"
+                                      placement="top" ngbTooltip="Edit">
+                                      <i class="ti-pencil text-info m-r-10 cursor" ></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="d-flex justify-content-center mt-2">    
+                    <ngb-pagination [(page)]="numberPages"
+                    [pageSize]="numberUserShow"
+                    [collectionSize]="usersArray.length"
+                    [maxSize]="5"></ngb-pagination>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--- Modal add user -->
+
+<ng-template #modalAddUser let-modal>
+
+    <div class="modal-header">
+        <h5 class="modal-title" id="editLabel">Agregar Usuario</h5>
+        <button type="button" class="close" (click)="closeModal()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
+    <div class="modal-body">
+        <form [formGroup]="formUsers" (ngSubmit)="saveDataUser()">
+
+            <div class="form-group row">
+                <label for="email" class="col-sm-4 col-form-label">Correo</label>
+                <div class="col-sm-8">
+                    <input type="email" class="form-control" formControlName="email" id="email">
+                    <div class="text-danger mt-2" *ngIf="invalidField('email')">
+                        <p>{{ getErrorMessage("email") }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label for="name" class="col-sm-4 col-form-label">Nombre</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" formControlName="name" id="name">
+                    <div class="text-danger mt-2" *ngIf="invalidField('name')">
+                        <p>{{ getErrorMessage("name") }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label for="surname" class="col-sm-4 col-form-label">Apellido</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" formControlName="surname" id="surname">
+                    <div class="text-danger mt-2" *ngIf="invalidField('surname')">
+                        <p>{{ getErrorMessage("surname") }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label for="identification" class="col-sm-4 col-form-label">Cédula</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" formControlName="identification" id="identification">
+                    <div class="text-danger mt-2" *ngIf="invalidField('identification')">
+                        <p>{{ getErrorMessage("identification") }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label for="phone" class="col-sm-4 col-form-label">Teléfono</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" formControlName="phone" id="phone">
+                    <div class="text-danger mt-2" *ngIf="invalidField('phone')">
+                        <p>{{ getErrorMessage("phone") }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label for="password" class="col-sm-4 col-form-label">Contraseña</label>
+                <div class="col-sm-8">
+                    <input type="password" class="form-control" formControlName="password" id="password">
+                    <div class="text-danger mt-2" *ngIf="invalidField('password')">
+                        <p>{{ getErrorMessage("password") }}</p>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="form-group row">
+                <label for="rol" class="col-sm-4 col-form-label">Roles</label>
+                <div class="col-sm-8">
+                    <select class="form-control" formControlName="rol" id="rol">
+                        <option *ngFor="let rol of rolsArray" value="{{rol._id}}">{{rol.name}}</option>
+                    </select>
+                    <div class="text-danger mt-2" *ngIf="invalidField('rol')">
+                        <p>{{ getErrorMessage("rol") }}</p>
+                    </div>
+                </div>
+            </div>
+                       
+            <div class="form-group row">
+                <label for="area" class="col-sm-4 col-form-label">Area</label>
+                <div class="col-sm-8">
+                    <select class="form-control" formControlName="area" id="area">
+                        <option value="pesca">Pescadería</option>
+                        <option value="agro">Agropecuario</option>
+                        <option value="admin">Ambas</option>
+                    </select>
+                    <div class="text-danger mt-2" *ngIf="invalidField('area')">
+                        <p>{{ getErrorMessage("area") }}</p>
+                    </div>
+                </div>
+            </div>            
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-dark" (click)="closeModal()">Cerrar</button>
+                <button type="submit" class="btn btn-primary">Agregar</button>
+            </div>
+        </form>
+    </div>
+
+</ng-template>
+
+
+<!--- Modal edit user -->
+<ng-template #editUserModal let-modal>
+  
+    <div class="modal-header">
+  
+      <h5 class="modal-title" id="editUserLabel">Editar Usuario</h5>
+  
+      <button type="button" class="close" (click)="closeModal()" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+  
+    </div>
+  
+    <div class="modal-body">
+  
+      <form [formGroup]="formEditUser" (ngSubmit)="updateDataUser(formEditUser.value)">
+  
+        <div class="form-group row">
+            <label for="email" class="col-sm-4 col-form-label">Correo</label>
+            <div class="col-sm-8">
+                <input type="email" class="form-control" formControlName="email" id="email">
+                <div class="text-danger mt-2" *ngIf="invalidFieldE('email')">
+                    <p>{{ getErrorMessageEdit("email") }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="name" class="col-sm-4 col-form-label">Nombre</label>
+            <div class="col-sm-8">
+                <input type="text" class="form-control" formControlName="name" id="name">
+                <div class="text-danger mt-2" *ngIf="invalidFieldE('name')">
+                    <p>{{ getErrorMessageEdit("name") }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="surname" class="col-sm-4 col-form-label">Apellido</label>
+            <div class="col-sm-8">
+                <input type="text" class="form-control" formControlName="surname" id="surname">
+                <div class="text-danger mt-2" *ngIf="invalidFieldE('surname')">
+                    <p>{{ getErrorMessageEdit("surname") }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="identification" class="col-sm-4 col-form-label">Cédula</label>
+            <div class="col-sm-8">
+                <input type="text" class="form-control" formControlName="identification" id="identification">
+                <div class="text-danger mt-2" *ngIf="invalidFieldE('identification')">
+                    <p>{{ getErrorMessageEdit("identification") }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="phone" class="col-sm-4 col-form-label">Teléfono</label>
+            <div class="col-sm-8">
+                <input type="text" class="form-control" formControlName="phone" id="phone">
+                <div class="text-danger mt-2" *ngIf="invalidFieldE('phone')">
+                    <p>{{ getErrorMessageEdit("phone") }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="password" class="col-sm-4 col-form-label">Contraseña</label>
+            <div class="col-sm-8">
+                <input type="password" class="form-control" formControlName="password" id="password" placeholder="Ingrese su nueva contraseña">
+                <div class="text-danger mt-2" *ngIf="invalidFieldE('password')">
+                    <p>{{ getErrorMessageEdit("password") }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="rol" class="col-sm-4 col-form-label">Roles</label>
+            <div class="col-sm-8">
+                <select class="form-control" formControlName="rol" id="rol">
+                    <option *ngFor="let rol of rolsArray" [value]="rol._id">{{rol.name}}</option>
+                </select>
+
+                <div class="text-danger mt-2" *ngIf="invalidFieldE('rol')">
+                    <p>{{ getErrorMessageEdit("rol") }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="area" class="col-sm-4 col-form-label">Area</label>
+            <div class="col-sm-8">
+                <select class="form-control" formControlName="area" id="area">
+                    <option value="pesca">Pescadería</option>
+                    <option value="agro">Agropecuario</option>
+                    <option value="admin">Ambas</option>
+                </select>
+                <div class="text-danger mt-2" *ngIf="invalidFieldE('area')">
+                    <p>{{ getErrorMessageEdit("area") }}</p>
+                </div>
+            </div>
+        </div> 
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancelar</button>
+  
+          <button type="submit" class="btn btn-primary">Editar</button>
+        </div>
+      </form>
+    </div>
+  </ng-template>

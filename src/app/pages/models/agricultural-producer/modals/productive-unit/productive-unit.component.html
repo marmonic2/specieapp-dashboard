@@ -1,0 +1,274 @@
+<div class="modal-header">
+
+    <h5 class="modal-title" id="editLabel">Editar actividades dedicadas a la unidad productiva</h5>
+
+    <button type="button" class="close" (click)="closeModal()" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+    </button>
+
+</div>
+
+<div class="modal-body">
+
+    <form [formGroup]="formEditProductiveUnit" (ngSubmit)="saveChange()">
+        <div class="form-group row">
+            <div>
+                <label for="latitude" class="col-sm-10 col-form-label">Latitud</label>
+                <div class="col-sm-10">
+                    <input type="number" class="form-control"  formControlName="latitude" id="latitude">
+                    <div class="text-danger mt-2" *ngIf="invalidField('latitude')">
+                        <p>{{ getErrorMessageEdit("latitude") }}</p>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <label for="length" class="col-sm-10 col-form-label">Longitud</label>
+                <div class="col-sm-10">
+                    <input type="number" class="form-control"  formControlName="length" id="length">
+                    <div class="text-danger mt-2" *ngIf="invalidField('length')">
+                        <p>{{ getErrorMessageEdit("length") }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- SELECT -->
+        <div class="form-group row">
+            <label for="principal_activity" class="col-sm-4 col-form-label">Actividad Principal</label>
+            <div class="col-sm-8">
+                <select class="form-control" formControlName="principal_activity" id="principal_activity">
+                    <option value="0">Producción de cultivos</option>
+                    <option value="1">Ganadería/pastoreo</option>
+                    <option value="2">Silvicultura</option>
+                    <option value="3">Acuicultura</option>
+                </select>
+                <div class="text-danger mt-2" *ngIf="invalidField('principal_activity')">
+                    <p>{{ getErrorMessageEdit("principal_activity") }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="self_consumption" class="col-sm-4 col-form-label">Generación de ingresos</label>
+            <div class="col-sm-8">
+                <select class="form-control" formControlName="self_consumption" id="self_consumption">
+                    <option value="0">Producción de cultivos</option>
+                    <option value="1">Ganadería/pastoreo</option>
+                    <option value="2">Silvicultura</option>
+                    <option value="3">Acuicultura</option>
+                </select>
+                <div class="text-danger mt-2" *ngIf="invalidField('self_consumption')">
+                    <p>{{ getErrorMessageEdit("self_consumption") }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="income_generation" class="col-sm-4 col-form-label">Autoconsumo</label>
+            <div class="col-sm-8">
+                <select class="form-control" formControlName="income_generation" id="income_generation">
+                    <option value="0">Producción de cultivos</option>
+                    <option value="1">Ganadería/pastoreo</option>
+                    <option value="2">Silvicultura</option>
+                    <option value="3">Acuicultura</option>
+                </select>
+                <div class="text-danger mt-2" *ngIf="invalidField('income_generation')">
+                    <p>{{ getErrorMessageEdit("income_generation") }}</p>
+                </div>
+            </div>
+        </div>
+        <!-- SELECT -->
+        <div class="form-group row">
+            <label for="form_ternure" class="col-sm-4 col-form-label">Forma de tenencia</label>
+            <div class="col-sm-8">
+                <select class="form-control" formControlName="form_ternure" id="form_ternure">
+                    <option value="0">Propia</option>
+                    <option value="1">Arriendo</option>
+                    <option value="2">Comodato</option>
+                    <option value="3">Ocupación de hecho</option>
+                </select>
+                <div class="text-danger mt-2" *ngIf="invalidField('form_ternure')">
+                    <p>{{ getErrorMessageEdit("form_ternure") }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="surface" class="col-sm-4 col-form-label">Superficie (m2)</label>
+            <div class="col-sm-8 select-icon">
+                <select class="form-control" (change)="onChange($event)" id="surface">
+                    <option *ngFor="let data of dataSelect.surface; let i=index" value="{{data._id}}">
+                        Superficie {{ i + 1 }}
+                    </option>
+                </select>
+                <div class="text-danger mt-2" *ngIf="invalidField('surface')">
+                    <p>{{ getErrorMessageEdit("surface") }}</p>
+                </div>
+                <a (click)="openModalEditSurface(editModalSurface, posSurface)" class="link mr-2 ml-2" [ngClass]="{'disable': posSurface === undefined}" placement="top" ngbTooltip="Edit">
+                    <i class="ti-pencil m-r-10 cursor" [ngClass]="{'disable': posSurface === undefined, 'text-info': posSurface !== undefined}" ></i>
+                </a>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="water_resource" class="col-sm-4 col-form-label">Recurso agua</label>
+            <div class="col-sm-8">
+                <select class="form-control" formControlName="water_resource" id="water_resource">
+                    <option value="0">Lluvia</option>
+                    <option value="1">Embalse</option>
+                    <option value="2">Pozo</option>
+                    <option value="3">Acueducto</option>
+                </select>
+                <div class="text-danger mt-2" *ngIf="invalidField('water_resource')">
+                    <p>{{ getErrorMessageEdit("water_resource") }}</p>
+                </div>
+            </div>
+        </div>
+        <!-- SELECT -->
+        <div class="form-group row">
+            <label for="cultivation_system" class="col-sm-4 col-form-label">Sistema de cultivo</label>
+            <div class="col-sm-8">
+                <select class="form-control" formControlName="cultivation_system" id="cultivation_system">
+                    <option value="0">Monocultivo</option>
+                    <option value="1">Asociados</option>
+                    <option value="2">Rotación de cultivos</option>
+                    <option value="3">Cultivos y ganadería</option>
+                </select>
+                <div class="text-danger mt-2" *ngIf="invalidField('cultivation_system')">
+                    <p>{{ getErrorMessageEdit("cultivation_system") }}</p>
+                </div>
+            </div>
+        </div>
+        <!-- NG FOR -->
+        <div class="form-group row">
+            <label for="crops_produced" class="col-sm-4 col-form-label">Cultivos</label>
+            <div class="col-sm-8 select-icon">
+                <select class="form-control" (change)="onChangeCrop($event)" id="crops_produced">
+                    <option *ngFor="let data of dataSelect.crops_produced; let i=index" [value]="i">
+                        {{data.crop}}
+                    </option>
+                </select>
+                <div class="text-danger mt-2" *ngIf="invalidField('crops_produced')">
+                    <p>{{ getErrorMessageEdit("crops_produced") }}</p>
+                </div>
+                <a (click)="openModalEditCrop(editModalCrops, posCrop)" class="link mr-2 ml-2" [ngClass]="{'disable': posCrop === undefined}" placement="top" ngbTooltip="Edit">
+                    <i class="ti-pencil m-r-10 cursor" [ngClass]="{'disable': posCrop === undefined, 'text-info': posCrop !== undefined}" ></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancelar</button>
+
+            <button type="submit" class="btn btn-primary">Editar</button>
+        </div>
+    </form>
+</div>
+
+<ng-template #editModalCrops let-modal>
+    <div class="modal-header">
+      <h5 class="modal-title" id="editLabel">Editar Cultivo</h5>
+  
+      <button type="button" class="close" (click)="closeModalS()" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+  
+    <div class="modal-body">
+  
+      <form [formGroup]="formEditCrop" (ngSubmit)="saveChangeCrop(formEditCrop.value)">
+  
+
+        <div class="form-group row">
+            <label for="crop" class="col-sm-4 col-form-label">Crop</label>
+            <div class="col-sm-8">
+                <select class="form-control" formControlName="crop" id="crop">
+                    <option *ngFor="let item of cropArray" [value]="item.description">{{item.description}}</option>
+                </select>
+                <div class="text-danger mt-2" *ngIf="invalidFieldCrop('crop')">
+                    <p>{{ getErrorMessageEditCrop("crop") }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="sown_area" class="col-sm-4 col-form-label">Area sembrada</label>
+            <div class="col-sm-8">
+                <input type="number" class="form-control"  formControlName="sown_area" id="sown_area">
+                <div class="text-danger mt-2" *ngIf="invalidFieldCrop('sown_area')">
+                    <p>{{ getErrorMessageEditCrop("sown_area") }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="harvest" class="col-sm-4 col-form-label">Cosecha</label>
+            <div class="col-sm-8">
+                <input type="number" class="form-control"  formControlName="harvest" id="harvest">
+                <div class="text-danger mt-2" *ngIf="invalidFieldCrop('harvest')">
+                    <p>{{ getErrorMessageEditCrop("harvest") }}</p>
+                </div>
+            </div>
+        </div> 
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeModalS()">Cancelar</button>
+  
+          <button type="submit" class="btn btn-primary">Editar</button>
+        </div>
+      </form>
+    </div>
+</ng-template>
+
+<!--- Modal edit Surface -->
+<ng-template #editModalSurface let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title" id="editLabel">Editar Superficie</h5>
+        <button type="button" class="close" (click)="closeModalS()" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
+    <div class="modal-body">
+        <form [formGroup]="formEditSurface" (ngSubmit)="saveChangeSurface(formEditSurface.value)">
+            <div class="form-group row">
+                <label for="size" class="col-sm-4 col-form-label">Tamaño del terreno</label>
+                <div class="col-sm-8">
+                    <input type="number" class="form-control"  formControlName="size" id="size">
+                    <div class="text-danger mt-2" *ngIf="invalidFieldSurface('size')">
+                        <p>{{ getErrorMessageEditSurface("size") }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="land" class="col-sm-4 col-form-label">Tierra del cultivo</label>
+                <div class="col-sm-8">
+                    <input type="number" class="form-control"  formControlName="land" id="land">
+                    <div class="text-danger mt-2" *ngIf="invalidFieldSurface('land')">
+                        <p>{{ getErrorMessageEditSurface("land") }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="pasture" class="col-sm-4 col-form-label">Pasto</label>
+                <div class="col-sm-8">
+                    <input type="number" class="form-control"  formControlName="pasture" id="pasture">
+                    <div class="text-danger mt-2" *ngIf="invalidFieldSurface('pasture')">
+                        <p>{{ getErrorMessageEditSurface("pasture") }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label for="forest" class="col-sm-4 col-form-label">Bosque Natural</label>
+                <div class="col-sm-8">
+                    <input type="number" class="form-control"  formControlName="forest" id="forest">
+                    <div class="text-danger mt-2" *ngIf="invalidFieldSurface('forest')">
+                        <p>{{ getErrorMessageEditSurface("forest") }}</p>
+                    </div>
+                </div>
+            </div> 
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="closeModalS()">Cancelar</button>
+
+                <button type="submit" class="btn btn-primary">Editar</button>
+            </div>
+        </form>
+    </div>
+</ng-template>

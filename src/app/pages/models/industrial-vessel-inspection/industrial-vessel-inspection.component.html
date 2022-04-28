@@ -1,0 +1,209 @@
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title mb-0">Tabla de Inspección Industrial</h4>
+                <div class="d-md-flex mt-3">
+                    <input type="text" name="search" placeholder="Buscar inspección industrial" class="form-control w-auto" (input)="filterIndustrialVesselInspection($event)" />
+                    <button *ngIf="id_view === 0" type="button" class="btn btn-danger ml-1" (click)='giveDataOff(false)'>
+                        <i class="fas fa-minus-circle" name="Inhabilitados"></i> 
+                    </button>
+                    <button *ngIf="id_view !== 0" type="button" class="btn btn-success ml-1" (click)='giveDataOff(true)'>
+                        <i class="fas fa-check-circle" name="Habilitados"></i> 
+                    </button>   
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-striped no-wrap border mt-4">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Información general</th>
+                                <th>Áreas de pesca</th>
+                                <th>Esfuerzo y características artes y métodos</th>
+                                <th>Control de transbordo</th>
+                                <th>Control de muestra langosta</th>
+                                <th>Fecha de Creación</th>
+                                <th>Fecha de Actualización</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let data of industrialVesselInspectionArray | slice: (numberPages-1) * numberDataShow : (numberPages-1) * numberDataShow + numberDataShow; let i = index">
+                                <td class="justify-content-center">{{getPositionIndustrialVesselInspection(data._id)}}</td>
+                                <td class="justify-content-center">
+                                    Editar
+                                    <a (click)="openModalEdit(editIndustrialVesselInspectionModalOne, data, i)" class="link mr-2" placement="top" ngbTooltip="Edit">
+                                      <i class="ti-pencil text-info m-r-10 cursor"></i>
+                                    </a>
+                                </td>
+                                <td class="justify-content-center">
+                                    Editar
+                                    <a (click)="openModalEdit(editIndustrialVesselInspectionModalTwo, data, i)" class="link mr-2" placement="top" ngbTooltip="Edit">
+                                      <i class="ti-pencil text-info m-r-10 cursor"></i>
+                                    </a>
+                                </td>
+                                <td class="justify-content-center">
+                                    Editar
+                                    <a (click)="openModalEditEffortCharacteristics(data)" class="link mr-2 ml-2" placement="top" ngbTooltip="Edit">
+                                        <i class="ti-pencil text-info m-r-10 cursor"></i>
+                                    </a>
+                                </td>
+                                <td class="justify-content-center">
+                                    Editar
+                                    <a (click)="openModalEditTransshipmentControl(data)" class="link mr-2 ml-2" placement="top" ngbTooltip="Edit">
+                                        <i class="ti-pencil text-info m-r-10 cursor"></i>
+                                    </a>
+                                </td>
+                                <td class="justify-content-center">
+                                    Editar
+                                    <a (click)="openModalEdit(editIndustrialVesselInspectionModalThree, data, i)" class="link mr-2" placement="top" ngbTooltip="Edit">
+                                      <i class="ti-pencil text-info m-r-10 cursor"></i>
+                                    </a>
+                                </td>
+                                <td class="justify-content-center">{{data.createdAt | date:"dd/MM/YY - hh:mm"}}</td>
+                                <td class="justify-content-center">{{data.updatedAt | date:"dd/MM/YY - hh:mm"}}</td>
+                                <td *ngIf="data.is_active; else industrialVesselInspectionDisabled" (click)="changeStatus(data)"><span class="btn btn-rounded btn-success">Activado</span> </td>
+                                <ng-template #industrialVesselInspectionDisabled><td (click)="changeStatus(data)"> <span class="btn btn-rounded btn-danger">Desactivado</span></td> </ng-template>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="d-flex justify-content-center mt-2">    
+                    <ngb-pagination [(page)]="numberPages"
+                    [pageSize]="numberDataShow"
+                    [collectionSize]="industrialVesselInspectionArray.length"
+                    [maxSize]="5"></ngb-pagination>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--- Modal edit IndustrialVesselInspection 1 -->
+<ng-template #editIndustrialVesselInspectionModalOne let-modal>
+  
+    <div class="modal-header">
+  
+      <h5 class="modal-title" id="editLabel">Información general</h5>
+  
+      <button type="button" class="close" (click)="closeModal()" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+  
+    </div>
+  
+    <div class="modal-body">
+  
+      <form [formGroup]="formEditIndustrialVesselInspection" (ngSubmit)="updateDataIndustrialVesselInspection(0)">
+        <div class="form-group row">
+            <label for="create_by" class="col-sm-4 col-form-label">Creado por</label>
+            <div class="col-sm-8">
+                <select class="form-control" formControlName="create_by" id="create_by">
+                    <option *ngFor="let item of userArray" [value]="item._id">{{item.email}}</option>
+                </select>
+                <div class="text-danger mt-2" *ngIf="invalidField('create_by')">
+                    <p>{{ getErrorMessageEdit("create_by") }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group center">
+            <label for="general_information" class="col-sm-6 col-form-label">Información General</label>
+            <a (click)="openModalEditGeneralInformation()" class="link mr-2 ml-2" [ngClass]="{'disable': posIncome === undefined}" placement="top" ngbTooltip="Edit">
+                <i class="ti-pencil text-info m-r-10 cursor" [ngClass]="{'disable': posIncome === undefined, 'text-info': posIncome !== undefined}"></i>
+            </a>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancelar</button>
+  
+          <button type="submit" class="btn btn-primary">Editar</button>
+        </div>
+      </form>
+    </div>
+</ng-template>
+
+<!--- Modal edit IndustrialVesselInspection 2 -->
+<ng-template #editIndustrialVesselInspectionModalTwo let-modal>
+  
+    <div class="modal-header">
+  
+      <h5 class="modal-title" id="editLabel">Áreas de pesca</h5>
+  
+      <button type="button" class="close" (click)="closeModal()" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+  
+    </div>
+  
+    <div class="modal-body">
+  
+      <form [formGroup]="formEditIndustrialVesselInspection" (ngSubmit)="updateDataIndustrialVesselInspection(2)">
+        
+        <div class="form-group row">
+            <label for="fishing_areas" class="col-sm-4 col-form-label">Área de pesca:</label>
+            <div class="col-sm-8 select-icon">
+                <select class="form-control" (change)="onChange($event)" id="fishing_areas">
+                    <option *ngFor="let data of industrialVesselInspectionArray[posIndustrialVesselInspection].fishing_areas; let i=index" [value]="i">
+                        {{data.description}}
+                    </option>
+                </select>
+                <div class="text-danger mt-2" *ngIf="invalidField('fishing_areas')">
+                    <p>{{ getErrorMessageEdit("fishing_areas") }}</p>
+                </div>
+                <a (click)="openModalFishingArea(posIncome)" class="link mr-2 ml-2" [ngClass]="{'disable': posIncome === undefined}" placement="top" ngbTooltip="Edit">
+                    <i class="ti-pencil text-info m-r-10 cursor" [ngClass]="{'disable': posIncome === undefined, 'text-info': posIncome !== undefined}"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancelar</button>
+  
+          <button type="submit" class="btn btn-primary">Editar</button>
+        </div>
+      </form>
+    </div>
+</ng-template>
+
+<!--- Modal edit IndustrialVesselInspection 3 -->
+<ng-template #editIndustrialVesselInspectionModalThree let-modal>
+  
+    <div class="modal-header">
+  
+      <h5 class="modal-title" id="editLabel">Control de muestra langosta</h5>
+  
+      <button type="button" class="close" (click)="closeModal()" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+  
+    </div>
+  
+    <div class="modal-body">
+  
+      <form [formGroup]="formEditIndustrialVesselInspection" (ngSubmit)="updateDataIndustrialVesselInspection(2)">
+  
+        <div class="form-group row">
+            <label for="observations" class="col-sm-4 col-form-label">Observaciones</label>
+            <div class="col-sm-8">
+                <textarea class="form-control textarea" rows="5"  formControlName="observations" id="observations"></textarea>
+                <div class="text-danger mt-2" *ngIf="invalidField('observations')">
+                    <p>{{ getErrorMessageEdit("observations") }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group center">
+            <label for="control_sample_lobster" class="col-sm-6 col-form-label">Control de Langostas</label>
+            <a (click)="openModalEditSampleLobster(data)" class="link mr-2 ml-2" [ngClass]="{'disable': posIncome === undefined}" placement="top" ngbTooltip="Edit">
+                <i class="ti-pencil text-info m-r-10 cursor" [ngClass]="{'disable': posIncome === undefined, 'text-info': posIncome !== undefined}"></i>
+            </a>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancelar</button>
+  
+          <button type="submit" class="btn btn-primary">Editar</button>
+        </div>
+      </form>
+    </div>
+</ng-template>

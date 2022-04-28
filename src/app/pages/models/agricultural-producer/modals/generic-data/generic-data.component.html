@@ -1,0 +1,117 @@
+
+    <div class="modal-header">
+  
+      <h5 class="modal-title" id="editLabel">Editar datos génericos</h5>
+  
+      <button type="button" class="close" (click)="closeModal()" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+  
+    </div>
+  
+    <div class="modal-body">
+  
+      <form [formGroup]="formEditGenericData" (ngSubmit)="saveChange()">
+  
+        <div class="form-group row">
+            <label for="registry_number" class="col-sm-4 col-form-label">Número de registro</label>
+            <div class="col-sm-8">
+                <input type="text" class="form-control"  formControlName="registry_number" id="registry_number" [attr.disabled]="true">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="business_name_establishment" class="col-sm-4 col-form-label">Nombre del predio</label>
+            <div class="col-sm-8">
+                <input type="text" class="form-control"  formControlName="business_name_establishment" id="business_name_establishment">
+                <div class="text-danger mt-2" *ngIf="invalidField('business_name_establishment')">
+                    <p>{{ getErrorMessageEdit("business_name_establishment") }}</p>
+                </div>
+            </div>
+        </div>
+        <!-- SELECT -->
+        <div class="form-group row">
+            <label for="person_type" class="col-sm-4 col-form-label">Tipo de persona</label>
+            <div class="col-sm-8">
+                <select class="form-control" formControlName="person_type" id="person_type">
+                    <option value="natural">Persona natural</option>
+                    <option value="juridica">Persona jurídica</option>
+                </select>
+                <div class="text-danger mt-2" *ngIf="invalidField('person_type')">
+                    <p>{{ getErrorMessageEdit("person_type") }}</p>
+                </div>
+            </div>
+        </div> 
+        <!-- SELECT -->
+        <div class="form-group row">
+            <label for="gender" class="col-sm-4 col-form-label">Género</label>
+            <div class="col-sm-8">
+                <select class="form-control" formControlName="gender" id="gender">
+                    <option value="M">M</option>
+                    <option value="F">F</option>
+                </select>
+                <div class="text-danger mt-2" *ngIf="invalidField('gender')">
+                    <p>{{ getErrorMessageEdit("gender") }}</p>
+                </div>
+            </div>
+        </div> 
+        <!-- NG FOR -->
+        <div class="form-group row">
+            <label for="create_by" class="col-sm-4 col-form-label">Creado por</label>
+            <div class="col-sm-8">
+                <select class="form-control" formControlName="create_by" id="create_by">
+                    <option *ngFor="let item of userArray" [value]="item._id">{{item.email}}</option>
+                </select>
+                <div class="text-danger mt-2" *ngIf="invalidField('create_by')">
+                    <p>{{ getErrorMessageEdit("create_by") }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="nit" class="col-sm-4 col-form-label">NIT</label>
+            <div class="col-sm-8">
+                <input type="text" class="form-control"  formControlName="nit" id="nit">
+                <div class="text-danger mt-2" *ngIf="invalidField('nit')">
+                    <p>{{ getErrorMessageEdit("nit") }}</p>
+                </div>
+            </div>
+        </div> 
+        <!-- SELECT -->
+        <div class="form-group row">
+            <label for="localization" class="col-sm-4 col-form-label">Localización</label>
+            <div class="col-sm-8">
+                <select class="form-control" formControlName="localization" id="localization">
+                    <option value="1">San Andrés</option>
+                    <option value="2">Providencia</option>
+                    <option value="3">Santa Catalina</option>
+                </select>
+                <div class="text-danger mt-2" *ngIf="invalidField('localization')">
+                    <p>{{ getErrorMessageEdit("localization") }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="identification" class="col-sm-4 col-form-label">Identificación</label>
+            <div class="col-sm-8">
+                <input type="text" class="form-control"  formControlName="identification" id="identification">
+                <div class="text-danger mt-2" *ngIf="invalidField('identification')">
+                    <p>{{ getErrorMessageEdit("identification") }}</p>
+                </div>
+            </div>
+        </div> 
+        <div class="form-group row">
+            <label for="informant_name" class="col-sm-4 col-form-label">Nombre Propietario</label>
+            <div class="col-sm-8">
+                <input type="text" class="form-control"  formControlName="informant_name" id="informant_name">
+                <div class="text-danger mt-2" *ngIf="invalidField('informant_name')">
+                    <p>{{ getErrorMessageEdit("informant_name") }}</p>
+                </div>
+            </div>
+        </div> 
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancelar</button>
+  
+          <button type="submit" class="btn btn-primary">Editar</button>
+        </div>
+      </form>
+    </div>

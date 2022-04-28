@@ -1,0 +1,90 @@
+<div class="modal-header">
+    <h5 class="modal-title" id="addLabel">Vista general</h5>
+    <button type="button" class="close" (click)="closeModal()" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
+<div *ngIf="arrayTotal.length !== 0">
+    <h2 class="center card-title">
+        {{ arrayTotal[posModule].nameModule }} 
+    </h2>
+    
+    <div *ngFor="let item of arrayTotal[posModule].forms; let i = index">
+        <div *ngIf="item.idFormulario === data.code">
+            <b>Formulario:</b> {{ item.nameSurvey }}
+    
+            <br> <br>
+            <div *ngIf="status">
+                <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
+                    <li *ngFor="let section of arrayTotal[posModule].forms[i].sections; let f = index" [ngbNavItem]="f">
+                        
+                        <a ngbNavLink> {{ 'Sección '+f }} </a>
+                        <!-- <a ngbNavLink> {{ section.nameSection }} </a> -->
+                        <ng-template ngbNavContent>
+                            <div *ngFor="let question of arrayTotal[posModule].forms[i].sections[f].question">
+                                <div *ngIf="question.widget_type === 'input'" class="form-group">
+                                    <label class="col-sm-8 col-form-label">{{ question.description }}</label>
+                                    <input [type]="question.dataType" class="ml-2 col-sm-8 form-control">
+                                </div>
+                                <!-- <div *ngIf="question.widget_type === 'radiobutton'" class="form-group">
+                                    <label class="col-sm-8 col-form-label">{{ question.description }}</label>
+                                    <div *ngFor="let item of question.data" >
+                                        <input type="radio" [value]="item.idData" name="radio" class="ml-2 col-sm-8 form-control">
+                                        <span>{{item.descriptionData}}</span>
+                                    </div>
+                                </div> -->
+    
+                                <div *ngIf="question.widget_type === 'checkbox'" class="form-group">
+                                    <label for="handLine" class="col-sm-8 col-form-label">{{ question.description }}</label>
+                                    <div class="col-sm-8">
+                                        <label *ngFor="let item of question.data" class="block"> 
+                                            <input type="checkbox" id="{{item.descriptionData}}" [value]="item.descriptionData" class="form-check-input"> {{ item.descriptionData }}
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                                <div *ngIf="question.widget_type === 'select'" class="form-group">
+                                    <label class="col-sm-8 col-form-label">{{ question.description }}</label>
+                                    <select name="" id="" class="ml-2 col-sm-8 form-control">
+                                        <option *ngFor="let item of question.data" [value]="item._idData">{{item.descriptionData}}</option>
+                                    </select>
+                                </div>
+    
+                                <div *ngIf="question.widget_type === 'textarea'" class="form-group">
+                                    <label class="col-sm-8 col-form-label">{{ question.description }}</label>
+                                    <textarea rows="5" class="ml-2 col-sm-8 form-control"></textarea>
+                                </div>
+    
+                                <div *ngIf="question.widget_type === 'canvas'" class="form-group">
+                                    <label class="col-sm-8 col-form-label">{{ question.description }}</label>
+                                    <canvas id="myCanvas" class="ml-2 col-sm-8 form-control canvita" width="200" height="100" style="border:1px solid #000000;">
+                                        
+                                    </canvas>
+                                </div>
+        
+                                <div *ngIf="question.widget_type === 'date'" class="form-group">
+                                    <label class="col-sm-8 col-form-label">{{ question.description }}</label>
+                                    <input type="date" class="ml-2 col-sm-8 form-control">
+                                </div>
+    
+                                <div *ngIf="question.widget_type === 'time'" class="form-group">
+                                    <label class="col-sm-8 col-form-label">{{ question.description }}</label>
+                                    <input type="time" class="ml-2 col-sm-8 form-control">
+                                </div>
+                            </div>
+                        </ng-template>
+                    </li>
+                </ul>
+                    
+                <div [ngbNavOutlet]="nav" class="mt-2"></div>
+            </div>  
+        </div>  
+    </div>
+</div>
+
+<div *ngIf="arrayTotal.length === 0" class="center">
+    <span class="error">
+        Información mal procesada, intente nuevamente
+    </span>
+</div>

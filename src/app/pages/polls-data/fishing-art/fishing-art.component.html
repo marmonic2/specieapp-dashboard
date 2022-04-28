@@ -1,0 +1,125 @@
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title mb-0">Tabla Artes de Pesca </h4>
+                <div class="d-md-flex mt-3">
+                    <input type="text" name="search" placeholder="Buscar arte de pesca" class="form-control w-auto" (input)="filterFishingArt($event)" />
+                    <button type="button"  class="btn btn-primary ml-auto" (click)="openModal(modalAddFishingArt)"><i class="fas fa-plus"></i> Agregar Arte de Pesca</button>
+                    <button *ngIf="id_view === 0" type="button" class="btn btn-danger ml-1" (click)='giveDataOff(false)'>
+                        <i class="fas fa-minus-circle" name="Inhabilitados"></i> 
+                    </button>
+                    <button *ngIf="id_view !== 0" type="button" class="btn btn-success ml-1" (click)='giveDataOff(true)'>
+                        <i class="fas fa-check-circle" name="Habilitados"></i> 
+                    </button>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-striped no-wrap border mt-4">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Descripción</th>
+                                <th>Fecha de Creación</th>
+                                <th>Fecha de Actualización</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let data of fishingArtArray | slice: (numberPages-1) * numberFishingArtShow : (numberPages-1) * numberFishingArtShow + numberFishingArtShow">
+                                <td class="justify-content-center">{{getPositionFishingArt(data._id)}}</td>
+                                <td class="justify-content-center">{{data.description}}</td>
+                                <td class="justify-content-center">{{data.createdAt | date:"dd/MM/YY - hh:mm"}}</td>
+                                <td class="justify-content-center">{{data.updatedAt | date:"dd/MM/YY - hh:mm"}}</td>
+                                <td *ngIf="data.is_active; else fishingArtDisabled" (click)="changeStatus(data)"><span class="btn btn-rounded btn-success">Activado</span> </td>
+                                <ng-template #fishingArtDisabled><td (click)="changeStatus(data)"> <span class="btn btn-rounded btn-danger">Desactivado</span></td> </ng-template>
+                                <td>
+                                    <a (click)="openModalEdit(editFishingArtModal, data)" class="link mr-2"
+                                      placement="top" ngbTooltip="Edit">
+                                      <i class="ti-pencil text-info m-r-10 cursor" ></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="d-flex justify-content-center mt-2">    
+                    <ngb-pagination [(page)]="numberPages"
+                    [pageSize]="numberFishingArtShow"
+                    [collectionSize]="fishingArtArray.length"
+                    [maxSize]="5"></ngb-pagination>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--- Modal add fishingArt -->
+
+<ng-template #modalAddFishingArt let-modal>
+
+    <div class="modal-header">
+        <h5 class="modal-title" id="addLabel">Agregar Arte de Pesca</h5>
+        <button type="button" class="close" (click)="closeModal()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
+    <div class="modal-body">
+        <form [formGroup]="formFishingArt" (ngSubmit)="saveDataFishingArt()">
+
+            <div class="form-group row">
+                <label for="description" class="col-sm-4 col-form-label">Descripción</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" formControlName="description" id="description">
+                    <div class="text-danger mt-2" *ngIf="invalidField('description')">
+                        <p>{{ getErrorMessage("description") }}</p>
+                    </div>
+                </div>
+            </div> 
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-dark" (click)="closeModal()">Cerrar</button>
+                <button type="submit" class="btn btn-primary">Agregar</button>
+            </div>
+        </form>
+    </div>
+
+</ng-template>
+
+
+<!--- Modal edit fishingArt -->
+<ng-template #editFishingArtModal let-modal>
+  
+    <div class="modal-header">
+  
+      <h5 class="modal-title" id="editLabel">Editar Arte de Pesca</h5>
+  
+      <button type="button" class="close" (click)="closeModal()" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+  
+    </div>
+  
+    <div class="modal-body">
+  
+      <form [formGroup]="formEditFishingArt" (ngSubmit)="updateDataFishingArt()">
+  
+        <div class="form-group row">
+            <label for="description" class="col-sm-4 col-form-label">Descripción</label>
+            <div class="col-sm-8">
+                <input type="text" class="form-control" formControlName="description" id="description">
+                <div class="text-danger mt-2" *ngIf="invalidFieldE('description')">
+                    <p>{{ getErrorMessageEdit("description") }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancelar</button>
+  
+          <button type="submit" class="btn btn-primary">Editar</button>
+        </div>
+      </form>
+    </div>
+  </ng-template>

@@ -26,6 +26,8 @@ import { CropsComponent } from './polls-data/crops/crops.component';
 import { CostsIncomeComponent } from './models/costs-income/costs-income.component';
 import { IndustrialVesselInspectionComponent } from './models/industrial-vessel-inspection/industrial-vessel-inspection.component';
 import { MonitoringAgriculturalPricesComponent } from './models/monitoring-agricultural-prices/monitoring-agricultural-prices.component';
+import {BoatsComponent} from "../modules/rgp-sai/pages/boats/boats.component";
+import {FishermenComponent} from "../modules/rgp-sai/pages/fishermen/fishermen.component";
 
 const routes: Routes = [
   {
@@ -318,6 +320,14 @@ const routes: Routes = [
       ],
     },
     component: MonitoringAgriculturalPricesComponent,
+  },
+  {
+    path: 'rgp-sai/boats',
+    component: BoatsComponent,
+  },
+  {
+    path: 'rgp-sai/fisherman',
+    component: FishermenComponent,
   },
 ];
 

@@ -1,0 +1,78 @@
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title mb-0">Tabla de Embarcaciones </h4>
+        <div class="d-flex mt-3">
+          <div ngbDropdown >
+            <button type="button" class="btn btn-outline-primary" id="dropdownBasic" ngbDropdownToggle>{{currentFilterType}}</button>
+            <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+              <button ngbDropdownItem (click)="setFilters({type: 'type', value: 'ART' , desc: 'Artesanales'})">Artesanales</button>
+              <button ngbDropdownItem (click)="setFilters({type: 'type', value: 'IND' , desc: 'Industriales'})">Industriales</button>
+            </div>
+          </div>
+          <div ngbDropdown >
+            <button type="button" class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle>{{currentFilterValidity}}</button>
+            <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+              <button ngbDropdownItem (click)="setFilters({type: 'validity', value: '' , desc: 'Vigencia permiso'})">Todos</button>
+              <button ngbDropdownItem (click)="setFilters({type: 'validity', value: 'active' , desc: 'Permiso vigente'})">Vigente</button>
+              <button ngbDropdownItem (click)="setFilters({type: 'validity', value: 'expired' , desc: 'Permiso vencido'})">Vencido</button>
+              <button ngbDropdownItem (click)="setFilters({type: 'validity', value: 'canceled' , desc: 'Permiso cancelado'})">Cancelado</button>
+            </div>
+          </div>
+          <div ngbDropdown >
+            <button type="button" class="btn btn-outline-primary" id="dropdownBasic2" ngbDropdownToggle>{{currentFilterPatent}}</button>
+            <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+              <button ngbDropdownItem (click)="setFilters({type: 'patent', value: '' , desc: 'Vigencia de la patente'})">Todos</button>
+              <button ngbDropdownItem (click)="setFilters({type: 'patent', value: 'active' , desc: 'Patente vigente'})">Vigente</button>
+              <button ngbDropdownItem (click)="setFilters({type: 'patent', value: 'expired' , desc: 'Patente vencida'})">Vencida</button>
+              <button ngbDropdownItem (click)="setFilters({type: 'patent', value: 'withoutPatent' , desc: 'Sin patente'})">Sin patente</button>
+            </div>
+          </div>
+          <input type="text" [(ngModel)]="search"  placeholder="Buscar embarcación" class="form-control w-auto" (ngModelChange)="filterBoat()" />
+        </div>
+
+        <div class="table-responsive">
+          <table class="table table-striped no-wrap border mt-4">
+            <thead>
+            <tr>
+              <th>#</th>
+              <th>Matrícula</th>
+              <th>Nombre</th>
+              <th>Permisionario</th>
+              <th>Propietario</th>
+              <th>Identificación propietario</th>
+              <th>TIpo de pesquería</th>
+              <th>Permiso</th>
+              <th>Patente</th>
+              <th>Inspección</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let data of boatArray; let i = index">
+              <td class="justify-content-center">{{i+1}}</td>
+              <td class="justify-content-center">{{data.name}}</td>
+              <td class="justify-content-center">{{data.registrationNumber}}</td>
+              <td class="justify-content-center">{{data.ownerPermit}}</td>
+              <td class="justify-content-center">{{data.owner}}</td>
+              <td class="justify-content-center">{{data.ownerIdentification}}</td>
+              <td class="justify-content-center">{{data.typeFishery}}</td>
+              <td class="justify-content-center"><span class="btn btn-rounded {{getStatus(data.currentPermit.status)}}">{{getStatusDesc(data.currentPermit.desc)}}</span></td>
+              <td class="justify-content-center"><span class="btn btn-rounded {{getStatus(data.currentPatent.status)}}">{{getStatusDesc(data.currentPatent.desc)}}</span></td>
+              <td class="justify-content-center"><span class="btn btn-rounded {{getStatus(data.currentInspection.status)}}">{{getStatusDesc(data.currentInspection.desc)}}</span></td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="d-flex justify-content-center mt-2">
+          <ngb-pagination [(page)]="currentPage"
+                          [pageSize]="itemsPerPage"
+                          [collectionSize]="totalItems"
+                          [maxSize]="5"
+                          (pageChange)="paginate($event)"
+          ></ngb-pagination>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -57,6 +57,7 @@ import { PigsComponent } from './models/agricultural-producer/modals/pigs/pigs.c
 import { BirdsComponent } from './models/agricultural-producer/modals/birds/birds.component';
 import { LivestockInventoryComponent } from './models/agricultural-producer/modals/livestock-inventory/livestock-inventory.component';
 import { NumFishermenComponent } from './models/monitoring/modals/num-fishermen/num-fishermen.component';
+import {RgpSaiModule} from "../modules/rgp-sai/rgp-sai.module";
 
 @NgModule({
   declarations: [
@@ -113,6 +114,7 @@ import { NumFishermenComponent } from './models/monitoring/modals/num-fishermen/
     CommonModule,
     PagesRoutingModule,
     ReactiveFormsModule,
+    RgpSaiModule,
     NgbModule,
     FormsModule,
     DragDropModule,

@@ -109,6 +109,31 @@ export const RouteAdmin: RouteInfo[] = [
   },
   {
     path: '',
+    title: 'RGP SAI',
+    icon: 'fas fa-ship',
+    class: 'has-arrow',
+    extralink: false,
+    submenu: [
+      {
+        path: '/pages/rgp-sai/boats',
+        title: 'Embarcaciones',
+        icon: '',
+        class: '',
+        extralink: false,
+        submenu: [],
+      },
+      {
+        path: '/pages/rgp-sai/fisherman',
+        title: 'Pescadores',
+        icon: '',
+        class: '',
+        extralink: false,
+        submenu: [],
+      }
+    ],
+  },
+  {
+    path: '',
     title: 'Recolección de Datos',
     icon: 'mdi mdi-dots-horizontal',
     class: 'nav-small-cap',

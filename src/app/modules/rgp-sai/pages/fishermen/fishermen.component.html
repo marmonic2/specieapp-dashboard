@@ -1,0 +1,76 @@
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title mb-0">Tabla de Pescadores </h4>
+        <div class="d-flex mt-3">
+          <div ngbDropdown >
+            <button type="button" class="btn btn-outline-primary" id="dropdownBasic" ngbDropdownToggle>{{currentFilterType}}</button>
+            <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+              <button ngbDropdownItem (click)="setFilters({type: 'type', value: 'UNO' , desc: 'Artesanales'})">Artesanales</button>
+              <button ngbDropdownItem (click)="setFilters({type: 'type', value: 'DOS' , desc: 'Industriales'})">Industriales</button>
+              <button ngbDropdownItem (click)="setFilters({type: 'type', value: 'TRES' , desc: 'Deportivos'})">Deportivos</button>
+            </div>
+          </div>
+          <div ngbDropdown >
+            <button type="button" class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle>{{currentFilterLocation}}</button>
+            <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+              <button ngbDropdownItem (click)="setFilters({type: 'location', value: '' , desc: 'Vigencia permiso'})">Todos</button>
+              <button ngbDropdownItem (click)="setFilters({type: 'location', value: 'UNO' , desc: 'SAN ANDRÉS'})">SAN ANDRÉS</button>
+              <button ngbDropdownItem (click)="setFilters({type: 'location', value: 'DOS' , desc: 'PROVIDENCIAS'})">PROVIDENCIAS</button>
+            </div>
+          </div>
+          <div ngbDropdown >
+            <button type="button" class="btn btn-outline-primary" id="dropdownBasic2" ngbDropdownToggle>{{currentFilterValidity}}</button>
+            <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+              <button ngbDropdownItem (click)="setFilters({type: 'validity', value: '' , desc: 'Vigencia del pescador'})">Todos</button>
+              <button ngbDropdownItem (click)="setFilters({type: 'validity', value: '1' , desc: 'Vigencia (SI)'})">SI</button>
+              <button ngbDropdownItem (click)="setFilters({type: 'validity', value: '0' , desc: 'Vigencia (NO)'})">NO</button>
+            </div>
+          </div>
+          <input type="text" [(ngModel)]="search"  placeholder="Buscar pescador" class="form-control w-auto" (ngModelChange)="filterFisherman()" />
+        </div>
+
+        <div class="table-responsive">
+          <table class="table table-striped no-wrap border mt-4">
+            <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Foto</th>
+              <th scope="col">No. permiso</th>
+              <th scope="col">Nombre(s)</th>
+              <th scope="col">Número de Identificación</th>
+              <th scope="col">Municipio</th>
+              <th scope="col">Vigencia</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let data of fishermanArray; let i = index">
+              <td class="justify-content-center">{{i+1}}</td>
+              <td class="justify-content-center">
+                <ngx-avatar [src]="data.photo"
+                            value="."
+                            size="50" [round]="true">
+                </ngx-avatar>
+              </td>
+              <td class="justify-content-center">{{data.cardNumber}}</td>
+              <td class="justify-content-center">{{data.name}}</td>
+              <td class="justify-content-center">{{data.identification}}</td>
+              <td class="justify-content-center">{{data.location}}</td>
+              <td class="justify-content-center"><span class="btn btn-rounded {{getStatus(data.validity)}}">{{getStatusDesc(data.validity)}}</span></td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="d-flex justify-content-center mt-2">
+          <ngb-pagination [(page)]="currentPage"
+                          [pageSize]="itemsPerPage"
+                          [collectionSize]="totalItems"
+                          [maxSize]="5"
+                          (pageChange)="paginate($event)"
+          ></ngb-pagination>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

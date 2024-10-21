@@ -12,9 +12,7 @@ import { PerfectScrollbarModule, PERFECT_SCROLLBAR_CONFIG, PerfectScrollbarConfi
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { ToastrModule } from 'ngx-toastr';
-import {
-  StoreModule, ActionReducerMap, ActionReducer, MetaReducer,
-} from '@ngrx/store';
+import { StoreModule, ActionReducer, MetaReducer} from '@ngrx/store';
 import { localStorageSync } from 'ngrx-store-localstorage';
 import { FullComponent } from './layouts/full/full.component';
 import { BlankComponent } from './layouts/blank/blank.component';
@@ -77,10 +75,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     NgbModule,
     RouterModule.forRoot(Approutes),
     ToastrModule.forRoot(),
-    StoreModule.forRoot(
-      { token: counterReducer },
-      { metaReducers },
-    ),
+    StoreModule.forRoot({ token: counterReducer }, { metaReducers }),
     PerfectScrollbarModule,
     HttpClientModule,
     ReactiveFormsModule,
@@ -90,7 +85,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
         useFactory: HttpLoaderFactory,
         deps: [HttpClient],
       },
-    }),
+    })
   ],
   providers: [
     {
@@ -101,4 +96,5 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {
+}
